@@ -2,14 +2,14 @@
 
 > **GitHub Pages 仓库建议名：`jepa-wam-policy-papers`**
 >
-> 仓库根目录已经包含可直接部署的静态网站：`index.html` 是论文总览，`papers/*.html` 是逐篇解读页。每篇论文的 Markdown 源文件仍然保留，方便继续编辑和审阅。
+> 仓库根目录已经包含可直接部署的静态网站：`index.html` 是基础卡片总览，`overview.html` 是所有论文的综合对照表，`papers/*.html` 是逐篇解读页。每篇论文的 Markdown 源文件仍然保留，方便继续编辑和审阅。
 
 ## 网站预览与部署
 
 - 本地预览：执行 `python3 -m http.server 8000`，然后打开 `http://localhost:8000/`。
 - 重新生成页面：执行 `python scripts/build_site.py`。
 - GitHub Pages：将本目录作为仓库根目录推送到 `main` 分支，`.github/workflows/pages.yml` 会自动发布网站。
-- 网站结构：`index.html` 汇总、`papers/*.html` 单篇模板、`assets/` 样式与筛选逻辑、`papers/*.md` 原始解读。
+- 网站结构：`index.html` 卡片汇总、`overview.html` 综合表格、`papers/*.html` 单篇模板、`assets/` 样式与筛选逻辑、`papers/*.md` 原始解读。
 - Codex skills：`skills/README.md`，包含论文总整理流程和新增单篇论文流程。
 
 > 更新时间：2026-10-10（Asia/Shanghai）。范围优先覆盖 2026 年公开、直接讨论 JEPA latent、world-action model（WAM）或 predictive latent world model + robot policy 的论文。数字以论文 HTML/PDF 正文为准；尚未从正文确认的字段明确标为“待核对”。
