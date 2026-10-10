@@ -104,8 +104,8 @@ def page_shell(title: str, body: str, active: str = "", scripts: tuple[str, ...]
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101827">
   <title>{html.escape(title)} · JEPA / WAM Papers</title>
-  <link rel="stylesheet" href="{'../' if active == 'paper' else ''}assets/styles.css">
-  <link rel="stylesheet" href="{prefix}assets/figures.css">
+  <link rel="stylesheet" href="{prefix}assets/styles.css?v=20261010">
+  <link rel="stylesheet" href="{prefix}assets/figures.css?v=20261010">
 </head>
 <body>
   <header class="topbar"><a class="brand" href="{prefix}index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="{prefix}index.html">卡片总览</a><a href="{prefix}overview.html">综合表格</a><a href="{prefix}figures.html">架构图画廊</a><a href="{prefix}all-papers.md">完整汇编</a><a href="{prefix}overview.md">研究索引</a></nav></header>
