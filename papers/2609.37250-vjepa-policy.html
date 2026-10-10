@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>V-JEPA Policy: Building Effective World-Action Models on Predictive Visual Latents · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2609.37250</p><h1>V-JEPA Policy: Building Effective World-Action Models on Predictive Visual Latents</h1><p class="paper-summary">冻结 V-JEPA 2.1 encoder，在下游联合训练 instruction-conditioned future-latent predictor 与 flow-matching action expert，以较小的可训练参数建立 WAM。</p><div class="paper-meta"><span>2026-09-29（arXiv v1）</span><span>直接相关；JEPA latent WAM / policy</span><span><span class="tag">V-JEPA</span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2609.37250" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2609.37250-vjepa-policy.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="v-jepa-policy-building-effective-world-action-models-on-predictive-visual-latents">V-JEPA Policy: Building Effective World-Action Models on Predictive Visual Latents</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Yang Zhang, Jiangyuan Zhao, Chenyou Fan, Jiayu Hu, Xiu Yuan, Chenjia Bai, Xiu Li</li>
+<li>单位：Tsinghua University；Shanghai Jiao Tong University；Fudan University；University of Science and Technology of China；Washington University in St. Louis；TeleAI；γ-Robotics</li>
+<li>日期：2026-09-29（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2609.37250">arXiv</a> · <a href="https://arxiv.org/html/2609.37250">HTML</a> · <a href="https://github.com/breez3young/VJEPA-Policy">代码</a></li>
+<li>类型：直接相关；JEPA latent WAM / policy</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>冻结 V-JEPA 2.1 encoder，在下游联合训练 instruction-conditioned future-latent predictor 与 flow-matching action expert，以较小的可训练参数建立 WAM。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>不依赖完整预训练视频生成器，而直接使用 predictive visual latent。</li>
+<li>predictor 的 future-informed context KV 条件化 action generation。</li>
+<li>DROID video–instruction pairs 可在无 action label 下预训练 predictor，再迁移到控制。</li>
+<li>0.9B 总参数，其中 0.6B 可训练。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>输入：多视角 RGB、proprioception、language instruction。</li>
+<li>冻结 V-JEPA 2.1 visual encoder；学习未来 latent 预测与 flow-matching action expert。</li>
+<li>预训练阶段只使用 DROID 视频-指令；下游阶段使用机器人 demonstrations。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>LIBERO：success rate 97.25%。</li>
+<li>LIBERO-Plus：79.25%；DROID predictor 预训练后 91.50%；扩展下游训练为 81.64%。</li>
+<li>RoboCasa-GR1：24 tasks，success rate 50.92%。</li>
+<li>RoboCasa-GR1 predictor-pretrained variant：55.58%。</li>
+<li>LIBERO-Plus 的 shift 维度包括 camera、initial state、language、lighting、texture、noise、layout；from-scratch V-JEPA Policy 平均 79.25%。</li>
+<li>真机 TianJi Marvin 两项任务、每任务 20 trials：Table Cleanup 11/20（55%），Saucer Racking 7/20（35%）；DROID predictor 预训练后分别 15/20（75%）和 17/20（85%），平均从 45% 升至 80%。</li>
+<li>另有 matched-framework / matched-budget 的视觉基础模型比较，强调分布偏移下 V-JEPA latent 的优势。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有跨视觉基础比较、future latent 预测/表示分析和控制结果分析；引用图表时以论文 HTML 章节为准。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<ul>
+<li>平台：TianJi Marvin dual-arm platform。</li>
+<li>任务：两项 multi-stage bimanual coordination。</li>
+<li>泛化：LIBERO-Plus 等 distribution-shift benchmark；DROID 无动作预训练验证跨数据来源的 future-modeling transfer。</li>
+</ul>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>这是当前最直接的同路线参照：V-JEPA latent、future prediction、flow matching action、LIBERO-Plus 与真机泛化均可作为 OpenWAM 对比轴。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>仍需从附录补齐 LIBERO/RoboCasa 的训练 seed 与完整 baseline 表格，以及真机失败分类；核心真机 trial 数和任务名已核对。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

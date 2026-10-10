@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2605.06388</p><h1>Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models</h1><p class="paper-summary">在 BridgeV2 固定 transition model、action conditioning 和数据协议下比较 VAE、Cosmos、V-JEPA 2.1、Web-DINO、SigLIP 2 等 latent encoder，分析 visual fidelity、planning 和 downstream policy 的关系。</p><div class="paper-meta"><span>2026-05-07（arXiv v1）</span><span>encoder comparison；semantic latent WAM/policy evaluation</span><span><span class="tag">V-JEPA</span><span class="tag">DINO</span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2605.06388" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2605.06388-reconstruction-or-semantics.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="reconstruction-or-semantics-what-makes-a-latent-space-useful-for-robotic-world-models">Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Nilaksh, Saurav Jha, Artem Zholus, Sarath Chandar</li>
+<li>单位：Chandar Research Lab；Mila – Quebec AI Institute；Polytechnique Montréal；Canada CIFAR AI Chair</li>
+<li>日期：2026-05-07（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2605.06388">arXiv</a> · <a href="https://arxiv.org/html/2605.06388">HTML</a> · <a href="https://hskalin.github.io/semantic-wm/">项目页</a></li>
+<li>类型：encoder comparison；semantic latent WAM/policy evaluation</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>在 BridgeV2 固定 transition model、action conditioning 和数据协议下比较 VAE、Cosmos、V-JEPA 2.1、Web-DINO、SigLIP 2 等 latent encoder，分析 visual fidelity、planning 和 downstream policy 的关系。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>证明 visual reconstruction quality 不能单独作为 robotic world-model 选择标准。</li>
+<li>将 encoder 质量拆成 visual fidelity、planning/downstream policy、latent representation quality 三个轴。</li>
+<li>发现 semantic encoders（尤其 V-JEPA 2.1、Web-DINO、SigLIP 2）在 policy-relevant 指标上通常优于 reconstruction latent。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>固定 DiT world-model architecture，只替换 encoder/decoder path；部分 semantic encoder 使用 S-VAE adapter。</li>
+<li>测试 DiT-S/B/L 多个规模、single/multi-view、CEM 与 inverse-dynamics probe。</li>
+<li>用 VLM judge 评估 trajectory success，并报告 bootstrap confidence interval。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>BridgeV2 world-model training/evaluation；包含 ID、OOD distractor、OOD instruction 以及 policy-in-the-loop episodes。</li>
+<li>指标：PSNR/SSIM/LPIPS/t-LPIPS/FID/FVD、CEM controllability error、ID/OOD success、IDM action-recovery Pearson r、success-probe accuracy。</li>
+<li>DiT-L 的 per-instruction policy 表比较 V-JEPA 2.1、Web-DINO、VAE、Cosmos、SigLIP 2；semantic encoder family 在 policy-facing metrics 更强。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 latent-space overview、OOD distractor/instruction rollout、per-instruction success、encoder-ceiling drop、inverse-dynamics recovery 和 representation quality 分析。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<p>重点是 BridgeV2 policy-in-the-loop / OOD evaluation；是否包含真正硬件闭环需按正文区分，不能将 VLM-judged episodes 直接写成真机实验。</p>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>这是最适合 OpenWAM 做 encoder ablation 的协议参考：用相同 WAM/policy head 对比 V-JEPA、DINO、VAE 等，并同时报告 latent quality、planning 和 policy success。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>需补录 BridgeV2 的真实/仿真比例、每个 OOD 设置 episodes、V-JEPA 2.1/Web-DINO checkpoint 和硬件部署信息。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

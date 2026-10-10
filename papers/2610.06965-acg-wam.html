@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>ACG-WAM: World-Action Modeling via Action-Conditioned Geometric Latent Prediction · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2610.06965</p><h1>ACG-WAM: World-Action Modeling via Action-Conditioned Geometric Latent Prediction</h1><p class="paper-summary">用当前观测和 actions 预测多时域几何 latent，以冻结 VGGT 对当前/未来图像对编码的 future slot 为 target，推理时移除辅助 teacher。</p><div class="paper-meta"><span>2026-10-03（arXiv v1）</span><span>直接相关；action-conditioned geometric JEPA auxiliary objective</span><span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span><span class="tag">RoboTwin</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2610.06965" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2610.06965-acg-wam.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="acg-wam-world-action-modeling-via-action-conditioned-geometric-latent-prediction">ACG-WAM: World-Action Modeling via Action-Conditioned Geometric Latent Prediction</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Jiangtao Liu, Zishang Xiang, Yage He, Lingguo Cui, Baihai Zhang, Runqi Chai, Senchun Chai</li>
+<li>单位：School of Automation, Beijing Institute of Technology；LimX Dynamics</li>
+<li>日期：2026-10-03（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2610.06965">arXiv</a> · <a href="https://arxiv.org/html/2610.06965">HTML</a> · <a href="https://github.com/RoboOpus/ACG-WAM">代码</a></li>
+<li>类型：直接相关；action-conditioned geometric JEPA auxiliary objective</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>用当前观测和 actions 预测多时域几何 latent，以冻结 VGGT 对当前/未来图像对编码的 future slot 为 target，推理时移除辅助 teacher。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>ACG-JEPA 显式监督 demonstration action 的几何后果。</li>
+<li>监督施加在 temporal mixing 前的共享 visual embedding。</li>
+<li>head/wrist cameras 的多视角、多 horizon 几何预测。</li>
+<li>teacher 与 auxiliary modules inference 时移除。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<p>当前 observation + intervening actions → geometric future features；target 来自 frozen VGGT current/future image pair 的 future slot。</p>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>RoboTwin 2.0，50 tasks：clean success 93.46%；randomized success 92.68%；均值 93.07%。</li>
+<li>真机 3 tasks：success 85.00%；partial completion 91.67%。</li>
+<li>相对 Motus：真机 success +10.00 pp；partial completion +9.17 pp。</li>
+<li>RoboTwin 每 task/setting 100 episodes，使用 unseen instruction templates、evaluation seed 42；Clean/Random 表格是 50-task macro averages。</li>
+<li>真机平台为 TRON2 + WUJI hands；每 task 100 demonstrations、15k fine-tuning updates、20 trials/task（总计 60 trials/policy）。</li>
+<li>PCS 将每 trial 记为 0/1/2：未完成/部分完成/完整完成，再归一化到 0–100；三任务平均等权。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 geometric latent、多 horizon prediction 和 auxiliary ablation 分析；详细图号/定量 probe 待从正文表格补录。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<ul>
+<li>真机：机器人 manipulation，3 tasks。</li>
+<li>仿真泛化：clean vs randomized scenes。</li>
+<li>摘要未说明真机是否做 unseen objects/geometry/scene 的独立泛化；不能将 randomized simulation 等同于真机泛化。</li>
+</ul>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>适合作为 OpenWAM auxiliary geometric prediction、camera fusion 和 action consequence supervision 的实验设计参考。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>需继续补齐 RoboTwin 的所有 task-wise 表格和具体随机化变量；真机硬件、任务、trial 数与 PCS 定义已核对。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

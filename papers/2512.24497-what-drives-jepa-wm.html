@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>What Drives Success in Physical Planning with Joint-Embedding Predictive World Models? · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2512.24497</p><h1>What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1><p class="paper-summary">系统研究 JEPA-WM 的 encoder、world-model architecture、training objective 和 planner，提出在 navigation 与 manipulation 上优于 DINO-WM 和 V-JEPA 2-AC 的组合 recipe。</p><div class="paper-meta"><span>2025-12-30（arXiv v4）</span><span>JEPA-WM design study；DINO-WM / V-JEPA 2-AC comparison</span><span><span class="tag">V-JEPA</span><span class="tag">DINO</span><span class="tag">WAM</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2512.24497" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2512.24497-what-drives-jepa-wm.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="what-drives-success-in-physical-planning-with-joint-embedding-predictive-world-models">What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Basile Terver, Tsung-Yen Yang, Jean Ponce, Adrien Bardes, Yann LeCun</li>
+<li>单位：Meta FAIR；Inria Paris；École normale supérieure / PSL；New York University</li>
+<li>日期：2025-12-30（arXiv v4）</li>
+<li>链接：<a href="https://arxiv.org/abs/2512.24497">arXiv</a> · <a href="https://arxiv.org/html/2512.24497">HTML</a> · <a href="https://github.com/facebookresearch/jepa-wms">代码/数据</a></li>
+<li>类型：JEPA-WM design study；DINO-WM / V-JEPA 2-AC comparison</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>系统研究 JEPA-WM 的 encoder、world-model architecture、training objective 和 planner，提出在 navigation 与 manipulation 上优于 DINO-WM 和 V-JEPA 2-AC 的组合 recipe。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>将 latent planning 设计拆为 encoder、transition model、loss、action representation 和 optimizer 等可控组件。</li>
+<li>同时覆盖 simulated environments 与 real-world robotic DROID data。</li>
+<li>比较 DINO-WM 与 V-JEPA-2-AC，并用 Spearman correlation 评估 validation metric 是否能预测 planning success。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>研究 DINO、V-JEPA/V-JEPA 2 等 visual encoder 的 frozen-feature world model。</li>
+<li>比较 CEM、gradient descent 和 Nevergrad-style planning，及不同 rollout horizon/data scale。</li>
+<li>推荐 recipe 按 navigation 与 real-world manipulation 分别选择。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>仿真：MetaWorld、Maze、Push-T、Wall；另有 RoboCasa Reach/Place。</li>
+<li>真机/数据：DROID real-world videos；报告真实数据与 RoboCasa holdout 的 planning performance。</li>
+<li>Table 2 直接比较 best model、DINO-WM 和 V-JEPA-2-AC；另报告 2%/10%/50%/100% data scaling。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 planned rollout 的 visual decoding、planner comparison、success-rate 与 validation metric 的 Spearman correlation，以及 image/video encoder 对比。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<p>使用 DROID real-world robotic data 评估；重点是跨真实视频/仿真 holdout 的 planning transfer。需区分其“真实数据评估”与独立真实机器人闭环部署。</p>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>适合作为 OpenWAM 的系统性 ablation checklist：encoder、rollout loss、planner 和 validation metric 都应单独控制，而不是只报告一个最终 success。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>需补录最终推荐模型的逐任务 success、真机是否闭环执行、各 encoder 的 checkpoint 和每个 planner 的完整预算。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

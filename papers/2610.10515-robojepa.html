@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>RoboJEPA: Scaling Robotic Latent World Models · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2610.10515</p><h1>RoboJEPA: Scaling Robotic Latent World Models</h1><p class="paper-summary">在覆盖 12 种机器人 embodiment 的大规模数据上研究 JEPA latent world model scaling，并验证 imagination error 可作为真实机器人规划能力的代理指标。</p><div class="paper-meta"><span>2026-10-07（arXiv v1）</span><span>直接相关；JEPA robotic world model / scaling</span><span><span class="tag">WAM</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2610.10515" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2610.10515-robojepa.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="robojepa-scaling-robotic-latent-world-models">RoboJEPA: Scaling Robotic Latent World Models</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Artem Zholus, Nicolas Beltran-Velez, Jianhao Yuan, Sarath Chandar, Tushar Nagarajan, Daniel Severo, Koustuv Sinha, Michal Drozdzal, Adriana Romero Soriano, Jeannette Bohg, Nicolas Ballas, Mahmoud Assran</li>
+<li>单位：FAIR at Meta；Chandar Research Lab；Mila – Quebec AI Institute；Polytechnique Montréal</li>
+<li>日期：2026-10-07（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2610.10515">arXiv</a> · <a href="https://arxiv.org/html/2610.10515">HTML</a></li>
+<li>类型：直接相关；JEPA robotic world model / scaling</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>在覆盖 12 种机器人 embodiment 的大规模数据上研究 JEPA latent world model scaling，并验证 imagination error 可作为真实机器人规划能力的代理指标。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>多 embodiment robotic world model 的 scaling law 视角。</li>
+<li>imagination error 随 compute 遵循二阶 power law，可外推模型质量。</li>
+<li>imagination error 与下游 robotic planning performance 强相关。</li>
+<li>发布 checkpoint、训练和部署代码；8B predictor。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<p>核心是 JEPA latent future prediction；改变模型规模、数据和 compute，测量 latent rollout/imagination error 与规划性能的关系。</p>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>多 embodiment robot data，重点是 scaling curve 而非单一 leaderboard。</li>
+<li>指标：imagination error、compute scaling law、downstream planning performance。</li>
+<li>摘要确认 zero-shot real-robot agent 能从单张 goal image 规划长时任务；具体任务/成功率待从实验表格补录。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 scaling curves，以及 imagination error 与规划性能的相关性分析。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<ul>
+<li>真机：zero-shot agent，single goal image conditioning，long-horizon planning。</li>
+<li>DROID/Franka 真机任务为 Grasp、Object Lift、Pick-and-Place；每个任务 10 episodes，goal 由 side/wrist camera 的单张图像指定。</li>
+<li>Table 12 报告 RoboJEPA-8B 三任务 success 为 67%/50%/27%，对应 task progress 为 67%/65%/42%；同时报告 22M–4B scaling variants。</li>
+<li>泛化：跨 embodiment / zero-shot deployment；平台、任务和物体/场景变化需从正文核对。</li>
+</ul>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>适合建立 predictor quality proxy：除 action success 外，记录 rollout latent error、horizon degradation 和下游 planning correlation。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>需补齐 12 个 embodiment 的完整清单、仿真任务表、scaling fit 区间和不同模型的 planner success；Franka/DROID 真机任务与 10-episode protocol 已核对。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Latent evolving World Action Model（LeWAM，I-JEPA 路线） · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2609.27455</p><h1>Latent evolving World Action Model（LeWAM，I-JEPA 路线）</h1><p class="paper-summary">用 I-JEPA embeddings 同时作为动作生成的视觉输入和未来状态预测目标，联合学习 action velocity 与 future embeddings，无需预训练视频扩散 backbone。</p><div class="paper-meta"><span>首次提交 2026-09-23；本卡片阅读版本 v2，更新于 2026-09-24。</span><span>直接相关；冻结 I-JEPA-H/14 encoder 的 latent WAM。与 NVIDIA 的 2610.12407 同名 LeWAM 不是同一篇。</span><span><span class="tag">I-JEPA</span><span class="tag">V-JEPA</span><span class="tag">DINO</span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span><span class="tag">RoboTwin</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2609.27455" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2609.27455-lewam-ijepa.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="latent-evolving-world-action-modellewami-jepa">Latent evolving World Action Model（LeWAM，I-JEPA 路线）</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Xueji Fang, Boqiang Duan, Hua Wu, Jingdong Wang, Guo-Jun Qi。</li>
+<li>单位：Zhejiang University；Westlake University；Baidu Inc.（论文首页列出的单位集合）。</li>
+<li>日期：首次提交 2026-09-23；本卡片阅读版本 v2，更新于 2026-09-24。</li>
+<li>链接：<a href="https://arxiv.org/abs/2609.27455">arXiv</a> · <a href="https://arxiv.org/html/2609.27455v2">HTML v2</a> · <a href="https://arxiv.org/pdf/2609.27455">PDF</a> · <a href="https://github.com/XuejiFang/LeWAM">代码</a> · <a href="https://huggingface.co/XuejiFang/LeWAM">模型</a>。</li>
+<li>类型：<strong>直接相关；冻结 I-JEPA-H/14 encoder 的 latent WAM</strong>。与 NVIDIA 的 <code>2610.12407</code> 同名 LeWAM 不是同一篇。</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>用 I-JEPA embeddings 同时作为动作生成的视觉输入和未来状态预测目标，联合学习 action velocity 与 future embeddings，无需预训练视频扩散 backbone。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>比较 frozen visual encoders 对动作学习的作用；I-JEPA-H 在本文设置中表现最好，但各 checkpoint 规模/预训练数据不同，不能推成所有任务下的普遍优越性。</li>
+<li><strong>AdaFuse</strong> 自适应融合冻结 encoder 的多层特征。</li>
+<li>共享 predictor 联合动作生成与未来 embedding prediction；attention mask 防止 clean action 泄漏到动作预测。</li>
+<li><strong>DemoDPO</strong> 根据 demonstration guidance 排序候选动作，利用偏好优化提高策略，而无需额外环境交互。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>Appendix C.2：I-JEPA-H/14 encoder 约 0.6B 参数，预训练于 ImageNet-22K，冻结；224×224 输入、14×14 patch，产生 256 image tokens。</li>
+<li>predictor + AdaFuse 共 402M 可训练参数；模型总参数约 1.0B。</li>
+<li>AdaLN-Zero 用 noise timestep 与 task embeddings 条件化 predictor；noisy action 使用噪声时间，visual/clean-action/future-query tokens 使用零时间。</li>
+<li>对比 encoder 时禁用 future embedding prediction，固定 12-layer、width 1280 的 action predictor 和训练 recipe；V-JEPA 2 按 single-image protocol 重复当前图像 16 次。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<p><strong>RoboTwin 2.0，50 tasks，Clean/Random 各 100 evaluation cases/task（Table 2）。</strong></p>
+<table>
+<thead>
+<tr>
+<th>模型/消融</th>
+<th style="text-align: right;">Clean SR (%)</th>
+<th style="text-align: right;">Random SR (%)</th>
+<th style="text-align: right;">Avg. (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I-JEPA Action Only</td>
+<td style="text-align: right;">88.42</td>
+<td style="text-align: right;">83.92</td>
+<td style="text-align: right;">86.17</td>
+</tr>
+<tr>
+<td>+ WM</td>
+<td style="text-align: right;">88.86</td>
+<td style="text-align: right;">85.18</td>
+<td style="text-align: right;">87.02</td>
+</tr>
+<tr>
+<td>+ WM + AdaFuse</td>
+<td style="text-align: right;">91.32</td>
+<td style="text-align: right;">90.06</td>
+<td style="text-align: right;">90.69</td>
+</tr>
+<tr>
+<td>LeWAM（含 DemoDPO）</td>
+<td style="text-align: right;">93.14</td>
+<td style="text-align: right;">91.42</td>
+<td style="text-align: right;">92.28</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Encoder-only policy 对照（Table 1；不是完整 WAM 的最终成绩）：</strong> DINOv3-Large 67.54%，V-JEPA2-Large 72.17%，V-JEPA2-Huge 81.70%，I-JEPA-Huge 86.17%；这是与用户指定 encoder 家族最直接相关的受控比较。</p>
+<h2 id="6">6. 可视化与表示分析</h2>
+<ul>
+<li>Figure 4/6：action-to-vision attention，展示 clean/randomized 场景中对交互物体的关注。</li>
+<li>Figure 7、Table 1：depth 与 instance segmentation probing；I-JEPA-Huge depth RMSE 0.445、correlation 0.853，AP@50 0.613、AP@75 0.323。</li>
+<li>Figure 5：DemoDPO threshold/coefficient/group-size 消融；Figure 8/9：真机 refinement 前后和跨方法 rollout。</li>
+</ul>
+<h2 id="7">7. 真机实验与泛化</h2>
+<ul>
+<li>Appendix D：AgileX 双臂平台，由两台 Piper manipulators 组成；固定 front camera + wrist cameras。</li>
+<li>任务：Stack Blocks、Fold Towel、Arrange Flowers；每方法每任务 <strong>50 rollouts</strong>，每次最多 3 分钟，30 Hz 执行，single A100 40 GB 部署。</li>
+<li>指标是 <strong>normalized task progress，不是完整任务成功率</strong>：按里程碑和失败扣分计分，最大分数分别为 7/6/6，然后归一化到 0–100。</li>
+<li>DemoDPO 前后 task progress：Stack Blocks 81.1→84.9%；Fold Towel 58.3→60.7%；Arrange Flowers 50.7→53.0%。</li>
+<li>初始 object configurations 按 rollout 采样。原文没有在该段定义独立的新物体/新材质/新场景/新指令真机 OOD split，因此只记录初始配置变化，不把它写成系统性真机 OOD 验证；RoboTwin Random 是仿真随机化。</li>
+</ul>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>是 <strong>I-JEPA → future embedding prediction + action generation</strong> 的直接 WAM 基线；可比较 I-JEPA vs V-JEPA vs DINO、multilayer AdaFuse、WM loss 和 DemoDPO 的独立作用。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>已核对 encoder、正文表格、可视化和真机评分协议。跨 encoder 的预训练数据与参数规模不完全匹配；真机 task-progress 与 success-rate benchmark 不应直接排序。来源定位：Table 1/2、Appendix C.2/C.5、Appendix D/D.1。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

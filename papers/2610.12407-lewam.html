@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>LeWAM: A JEPA World Action Model with Diffusion-Steering-Based MPC · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2610.12407</p><h1>LeWAM: A JEPA World Action Model with Diffusion-Steering-Based MPC</h1><p class="paper-summary">用 decoder-free JEPA latent 端到端支持 forward、backward、inverse dynamics 和 policy prediction，并在 policy noise space 中用 diffusion-steering MPC 规划。</p><div class="paper-meta"><span>2026-10-08（arXiv v1）</span><span>直接相关；JEPA WAM + MPC</span><span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2610.12407" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2610.12407-lewam.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="lewam-a-jepa-world-action-model-with-diffusion-steering-based-mpc">LeWAM: A JEPA World Action Model with Diffusion-Steering-Based MPC</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Shashank Hegde, Alexander Popov, Elie Aljalbout, Nikolai Smolyanskiy</li>
+<li>单位：论文 HTML 未给出可稳定抽取的 affiliation，待从 PDF 首页核对。</li>
+<li>日期：2026-10-08（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2610.12407">arXiv</a> · <a href="https://arxiv.org/html/2610.12407">HTML</a></li>
+<li>类型：直接相关；JEPA WAM + MPC</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>用 decoder-free JEPA latent 端到端支持 forward、backward、inverse dynamics 和 policy prediction，并在 policy noise space 中用 diffusion-steering MPC 规划。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>bidirectional transformer 统一四类预测模式。</li>
+<li>latent 同时追求状态可读性和对视觉 distractor 的不敏感。</li>
+<li>指出 action-space MPC 会利用 dynamics model error，改在 policy noise space 规划。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>与 regular LeWM、reconstruction-based WAM 对比；flow-matching policy 使用匹配 encoder/规模。</li>
+<li>采用 DS-CEM（diffusion-steering cross-entropy method）进行规划。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>robosuite：Lift、Can、Square、ToolHang、Transport。</li>
+<li>closed-loop success；5 training seeds；每个 cell 50 episodes。</li>
+<li>训练使用 90% 数据、300 epochs、5 seeds；其余 10% 作为评测 split，并在含视觉 distractor 的 simulator 中测试。</li>
+<li>六项任务还包括 PushT；每个 world model/planner 组合共 250 rollouts（5 training seeds × 50 evaluation seeds）。</li>
+<li>Table 3 的 mode ablation 同时报告 ridge-probe state R²、policy success 与 DS-CEM success；Table 4 测试 policy-noise proposal 的 projection shell。</li>
+<li>摘要结论：acting 与匹配规模的 flow-matching policy 相当；noise-space MPC 优于 raw-action 规划。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 linear probe（robot/object state）、distractor 忽略对比和 latent/规划结果图。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<p>重点为仿真闭环实验；作者将 real-world data/application 列为后续方向，未报告真机泛化结果。</p>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>适合作为 OpenWAM future predictor 是否能同时服务 policy 与 planning 的对照，并提醒评估 action-space MPC 的 model-error exploitation。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>作者单位已从正文确认是 NVIDIA；仍需补录六任务完整逐项 success 表和各 planner 的完整对照数值。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>

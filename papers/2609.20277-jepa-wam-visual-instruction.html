@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">总览</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2609.20277</p><h1>JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1><p class="paper-summary">用文本生成器为每条 instruction 生成视觉完成假设，再用 frozen V-JEPA 2.1 编码成 dense goal tokens，同时条件化 video/action experts，强化 WAM 的 instruction following。</p><div class="paper-meta"><span>2026-08-04（arXiv v1）</span><span>直接相关；visual-instruction-conditioned JEPA-WAM</span><span><span class="tag">V-JEPA</span><span class="tag">WAM</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2609.20277" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2609.20277-jepa-wam-visual-instruction.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1 id="jepa-wam-connecting-generated-visual-instructions-to-world-action-models-through-jepa-latent-representations">JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1>
+<h2 id="1">1. 基本信息</h2>
+<ul>
+<li>作者：Tianbin Liu, Jian Zhu, Taiyi Su, Jianjun Zhang, Chong Ma, Zitai Huang, Yi Xu</li>
+<li>单位：论文 HTML 正文未提供作者 affiliation 字段；单位暂记为“未公开/待 PDF 首页核对”，不据作者或项目名推断。</li>
+<li>日期：2026-08-04（arXiv v1）</li>
+<li>链接：<a href="https://arxiv.org/abs/2609.20277">arXiv</a> · <a href="https://arxiv.org/html/2609.20277">HTML</a></li>
+<li>类型：直接相关；visual-instruction-conditioned JEPA-WAM</li>
+</ul>
+<h2 id="2">2. 一句话摘要</h2>
+<p>用文本生成器为每条 instruction 生成视觉完成假设，再用 frozen V-JEPA 2.1 编码成 dense goal tokens，同时条件化 video/action experts，强化 WAM 的 instruction following。</p>
+<h2 id="3">3. 主要创新点</h2>
+<ul>
+<li>用 generated visual-instruction bank 补充稀疏、重复的轨迹级语言标注。</li>
+<li>V-JEPA 2.1 将生成图像中的任务语义与外观/布局 nuisance 解耦，并保留空间结构。</li>
+<li>不训练图像生成器；通过 cross-attention 让 compact goal tokens 条件化 video/action experts。</li>
+<li>构建 ID、scene OOD 和 instruction OOD 的真机 benchmark。</li>
+</ul>
+<h2 id="4">4. 方法与训练信号</h2>
+<ul>
+<li>每条文本 instruction 采样多张 task-completion image；默认 visual-instruction bank 为 1,024 张。</li>
+<li>V-JEPA 2.1 dense representations 经 learnable projector 压缩为 goal tokens。</li>
+<li>与 real demonstration keyframe bank（KF-64）和不同规模 generated bank（J-64/J-512/J-1024）比较。</li>
+</ul>
+<h2 id="5-benchmark">5. Benchmark / 测评方法 / 结果</h2>
+<ul>
+<li>真机 benchmark：11 个行为相关任务，包括 Give bread/pear/egg/carrot、PnP car/bread/carrot/egg/pear、Sort toys、Wipe table。</li>
+<li>ID 平均 success：π0 30.0%，Fast-WAM 77.3%，JEPA-WAM 87.3%。</li>
+<li>Scene OOD（OOD-S）：π0 7.3%，Fast-WAM 47.3%，JEPA-WAM 74.5%。</li>
+<li>Instruction OOD（OOD-I）：π0 23.6%，Fast-WAM 66.4%，JEPA-WAM 80.9%。</li>
+<li>Generated bank 对比：J-1024 平均 ID/OOD-S/OOD-I 为 82.5%/67.5%/75.0%，优于 KF-64 的 68.8%/47.5%/53.8%。</li>
+</ul>
+<h2 id="6">6. 可视化与表示分析</h2>
+<p>有 704 张生成图像的 UMAP：不同 task-level visual hypotheses 形成结构化区域；另有真实 keyframe 与 generated bank 的 qualitative 对比。</p>
+<h2 id="7">7. 真机实验与泛化</h2>
+<ul>
+<li>真机为共享 workspace manipulation，固定 box/plate/towel basket，随机化 object layout 与 container configuration。</li>
+<li>ID：训练分布；OOD-S：新场景组合；OOD-I：训练集中未出现的 instruction paraphrase。</li>
+<li>这是明确区分 scene generalization 与 language generalization 的真机评测，而不是仅改变物体颜色。</li>
+<li>所有模型使用同一套 1,370 demonstrations；真机推理在单张 NVIDIA RTX 5090 上，WAM 使用 10 action-denoising steps。</li>
+</ul>
+<h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
+<p>适合作为 OpenWAM instruction grounding 与 visual goal conditioning 的独立增强模块；可以在不改变 action/world backbone 的情况下测试“语言→视觉目标 latent”的收益。</p>
+<h2 id="9">9. 局限与待核对项</h2>
+<p>需从正文补充真实机器人本体型号、每个 task 的 rollout 数、生成器的完整型号及生成/推理时间成本；训练数据量和 GPU 推理设置已核对。</p></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+</body>
+</html>
