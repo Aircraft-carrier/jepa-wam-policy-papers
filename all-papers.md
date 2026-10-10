@@ -1,7 +1,7 @@
 # JEPA / WAM / Policy 论文完整合辑
 
 > 合并日期：2026-10-10（Asia/Shanghai）。
-> 来源：本目录 `papers/` 下的全部 23 篇 Markdown 论文卡片，按源文件名（arXiv ID）整理。
+> 来源：本目录 `papers/` 下的全部 19 篇 Markdown 论文卡片，按源文件名（arXiv ID）整理。
 > 本文件完整保留各卡片内容，仅调整标题层级并增加目录、定位锚点和源文件入口；不是摘要版。
 > 原文中的“待核对”、不确定性及指标口径一并保留；合并不代表新增事实核验。
 > 本文件是当前快照；源卡片后续修改不会自动同步到合辑。
@@ -11,12 +11,8 @@
 1. [DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning](#paper-2411.04983-dino-wm) · [独立卡片](papers/2411.04983-dino-wm.md)
 2. [V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning](#paper-2506.09985-v-jepa-2) · [独立卡片](papers/2506.09985-v-jepa-2.md)
 3. [What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?](#paper-2512.24497-what-drives-jepa-wm) · [独立卡片](papers/2512.24497-what-drives-jepa-wm.md)
-4. [JEPA-VLA: Video Predictive Embedding is Needed for VLA Models](#paper-2602.11832-jepa-vla) · [独立卡片](papers/2602.11832-jepa-vla.md)
-5. [World Action Models are Zero-shot Policies (DreamZero)](#paper-2602.15922-dreamzero) · [独立卡片](papers/2602.15922-dreamzero.md)
-6. [JEPA-Bisim: Learning Robust Visual Representations for Planning with Joint-Embedding Predictive World Models](#paper-2602.18639-jepa-bisim) · [独立卡片](papers/2602.18639-jepa-bisim.md)
 7. [Reconstruction or Semantics? What Makes a Latent Space Useful for Robotic World Models](#paper-2605.06388-reconstruction-or-semantics) · [独立卡片](papers/2605.06388-reconstruction-or-semantics.md)
 8. [Learning Visual Feature-Based World Models via Residual Latent Action](#paper-2605.07079-rla-wm) · [独立卡片](papers/2605.07079-rla-wm.md)
-9. [Latent World Models with Monotone Planning Costs for Image-Goal Navigation](#paper-2608.09073-mcr-dino-world-model) · [独立卡片](papers/2608.09073-mcr-dino-world-model.md)
 10. [JEPA-WAM: Learning Vision-Language-Action Policies with Joint-Embedding World Modeling](#paper-2608.09381-jepa-wam-joint) · [独立卡片](papers/2608.09381-jepa-wam-joint.md)
 11. [JEPA Policy: Diffusion-Free Imitation Learning via Paired Action and Future Representation Prediction](#paper-2609.09630-jepa-policy) · [独立卡片](papers/2609.09630-jepa-policy.md)
 12. [DUET-DINO: Simultaneous Cross-View World Modeling for Latent Planning in Robot Manipulation](#paper-2609.10506-duet-dino) · [独立卡片](papers/2609.10506-duet-dino.md)
@@ -123,7 +119,7 @@
 - 该工作更像 OpenWAM 的 visual foundation / world-model pretraining 依据，而不是完整 action-generating WAM。
 
 ### 8. 与 OpenWAM 的关系
-V-JEPA 2 是 V-JEPA Policy 和 JEPA-VLA 的关键视觉基础；V-JEPA 2-AC 提供了 OpenWAM 可复用的 latent planning、goal-image 和 counterfactual visualization 评测范式。
+V-JEPA 2 是 V-JEPA Policy 的关键视觉基础；V-JEPA 2-AC 提供了 OpenWAM 可复用的 latent planning、goal-image 和 counterfactual visualization 评测范式。
 
 ### 9. 局限与待核对项
 仍需补录两个实验室的相机布置和每个目标物的逐项失败类型；真机 trial 数、任务类型与 success 表已核对。
@@ -175,148 +171,8 @@ V-JEPA 2 是 V-JEPA Policy 和 JEPA-VLA 的关键视觉基础；V-JEPA 2-AC 提�
 
 ---
 
-<a id="paper-2602.11832-jepa-vla"></a>
 
-来源：[papers/2602.11832-jepa-vla.md](papers/2602.11832-jepa-vla.md)
 
-## JEPA-VLA: Video Predictive Embedding is Needed for VLA Models
-
-### 1. 基本信息
-- 作者：Shangchen Miao, Ningya Feng, Jialong Wu, Ye Lin, Xu He, Dong Li, Mingsheng Long
-- 单位：Tsinghua University；Huawei Noah’s Ark Lab
-- 日期：2026-02-12（arXiv v1）
-- 链接：[arXiv](https://arxiv.org/abs/2602.11832) · [HTML](https://arxiv.org/html/2602.11832)
-- 类型：相邻直接相关；V-JEPA 2 representation + VLA
-
-### 2. 一句话摘要
-将视频预测 embedding 注入已有 VLA，利用 V-JEPA 2 的任务相关状态表示和 temporal policy prior 提升样本效率与分布偏移泛化。
-
-### 3. 主要创新点
-- 通过系统表示分析指出语言-图像对比和 image-only SSL 表示不足以提供 temporal policy prior。
-- 无大规模 robot pretraining 的 VLA 使用 token concatenation；已有 robot pretraining 的 VLA 使用 gated cross-attention，避免破坏原有先验。
-- 把“视频预测表征是否能改善 VLA”拆成 environment understanding 与 policy prior 两个可分析问题。
-
-### 4. 方法与训练信号
-- 基于冻结 V-JEPA 2 表征，将视频 predictive embedding 与 VLA 特征融合。
-- 比较 mainstream VLA setting、limited-data setting 和多种 pretrained visual representation。
-
-### 5. Benchmark / 测评方法 / 结果
-- LIBERO 四套：Spatial、Object、Goal、Long，每套 10 tasks、50 tele-operated demonstrations；平均 success 96.40%，OpenVLA-OFT reproduction 90.30%。
-- LIBERO-Plus：按官方协议对 Spatial/Object/Goal/Long 分别选择 4 个 checkpoint 取平均，评估 camera、initial state、language、lighting、background、noise、layout 等 shift。
-- RoboTwin 2.0：Aloha-AgileX 双臂，50-task benchmark 中评估 6 tasks；Easy/Hard 和 domain randomization success 均报告，主表平均为 Easy 73.5%、Hard 17.7%。
-- CortexBench：从 17 tasks 中选 10 个可稳定复现 VC-1 的任务；MetaWorld 报 reward 而非强行转换成 binary success。
-- 真机：single-arm pick-and-place；100 demonstrations，另测 1/5 数据（22 trajectories）；每个模型 10 trials。
-
-### 6. 可视化与表示分析
-有 fusion architecture、状态转移预测、视频 predictive embedding 的环境/策略表示分析，以及真机标准布局、改布局、改光照的成功轨迹可视化。
-
-### 7. 真机实验与泛化
-- 平台：Piper single robot arm。
-- 任务：pick-and-place。
-- 泛化：改变桌面物体布局和亮度；同时测试 1/5 训练数据，属于数据效率与环境外推的联合分析。
-- 论文明确展示 standard、modified layouts、modified lights 三类测试场景；每个模型 10 independent trials。
-
-### 8. 与 OpenWAM 的关系
-适合作为“只替换 visual foundation、不改变 policy head”这一控制变量基线，帮助区分 OpenWAM 的收益来自 predictive latent 还是 WAM action/world joint training。
-
-### 9. 局限与待核对项
-RoboTwin 六个 task 的逐项表格、真机 baseline 与 JEPA-VLA 的逐设置成功率需补录；CortexBench reward 不应与 success rate 直接混比。
-
----
-
-<a id="paper-2602.15922-dreamzero"></a>
-
-来源：[papers/2602.15922-dreamzero.md](papers/2602.15922-dreamzero.md)
-
-## World Action Models are Zero-shot Policies (DreamZero)
-
-### 1. 基本信息
-- 作者：Seonghyeon Ye et al.（完整作者见论文首页）
-- 单位：NVIDIA（论文 HTML 作者块标注 NVIDIA；项目页为 DreamZero team）
-- 日期：2026-02-17（arXiv v1）
-- 链接：[arXiv](https://arxiv.org/abs/2602.15922) · [HTML](https://arxiv.org/html/2602.15922) · [代码](https://github.com/dreamzero0/dreamzero)
-- 类型：WAM 范式基线；非 JEPA，video diffusion + action
-
-### 2. 一句话摘要
-DreamZero 基于预训练视频扩散 backbone 联合预测未来视频和动作，强调异构数据学习、开放世界泛化、跨 embodiment transfer 和实时闭环控制。
-
-### 3. 主要创新点
-- 14B autoregressive video diffusion WAM，同时生成 future video 与 action。
-- 通过系统/模型优化实现 7 Hz real-time closed-loop control。
-- 不依赖重复 demonstration，使用 heterogeneous robot data 学习 diverse skills。
-- video-only human/other-robot data 支持跨 embodiment transfer；30 分钟 play data 支持新 embodiment adaptation。
-
-### 4. 方法与训练信号
-- visual context、language、proprioception 输入 autoregressive DiT；video/action 使用独立 decoder 联合预测。
-- DreamZero-Flash 通过 decoupled noise schedule 和一步/少步 denoising 降低推理成本。
-
-### 5. Benchmark / 测评方法 / 结果
-- AgiBot evaluation：默认 unseen environment + unseen objects；报告 seen-task 与 unseen-task task progress。
-- RoboArena real-world evaluation；PolaRiS 与 Genie Sim 3.0 simulation benchmarks；训练约 500 小时真实数据但未在 10k 小时仿真数据上显式训练。
-- 论文摘要报告相对 state-of-the-art VLA 在新任务/环境泛化上超过 2×；video-only transfer 用 10–20 分钟数据在 unseen tasks 上相对提升超过 42%。
-- 新 embodiment adaptation：30 分钟 play data；闭环频率 7 Hz。
-- 数据采集覆盖 22 个真实环境；论文强调 diversity over repetition，而不是每个 task 大量重复 demonstrations。
-
-### 6. 可视化与表示分析
-有联合 video/action 预测对齐图、free-form task rollout、数据分布统计、unseen-task rollout 和 inference-speed / noise-schedule 分析。
-
-### 7. 真机实验与泛化
-- 机器人：AgiBot G1；另有 YAM → AgiBot 机器人迁移和 human → robot transfer。
-- 任务类型：object manipulation、tool use、human-robot interaction、pick-and-place variants、table bussing。
-- 泛化：unseen objects、unseen environments、unseen tasks、跨机器人/人类视频、few-shot 新 embodiment；这是 WAM 文献中最完整的真机泛化矩阵之一。
-
-### 8. 与 OpenWAM 的关系
-适合作为非 JEPA 的强 WAM 对照，特别用于区分 predictive latent 的收益与 video-generation prior、异构数据和 cross-embodiment 数据规模的收益。
-
-### 9. 局限与待核对项
-需要从正文表格补齐每个 benchmark 的 task list、task-progress 分母/标准误、YAM 硬件和逐项 success；不能用摘要的“超过 2×”替代完整表格。
-
----
-
-<a id="paper-2602.18639-jepa-bisim"></a>
-
-来源：[papers/2602.18639-jepa-bisim.md](papers/2602.18639-jepa-bisim.md)
-
-## JEPA-Bisim: Learning Robust Visual Representations for Planning with Joint-Embedding Predictive World Models
-
-### 1. 基本信息
-- 作者：Leonardo F. Toso, Davit Shadunts, Yunyang Lu, Gloria Geng, Nihal Sharma, Donglin Zhan, Nam H. Nguyen, James Anderson
-- 单位：Columbia University；Capital One
-- 日期：2026-02-20（arXiv v2）
-- 链接：[arXiv](https://arxiv.org/abs/2602.18639) · [HTML](https://arxiv.org/html/2602.18639)
-- 类型：JEPA/DINO-WM robustness；latent planning
-
-### 2. 一句话摘要
-在预测 latent 之外加入 bisimulation encoder，使具有相似控制动力学的状态在表示空间中接近，从而抑制背景和 distractor 等 slow features。
-
-### 3. 主要创新点
-- 针对 DINO-WM 对 slow features 敏感的问题，引入 control-relevant state equivalence。
-- latent dimension 可比 DINO-WM 小至约 10×。
-- 设计与 encoder-agnostic 的 pretrained visual feature 接口，可配 DINOv2、SimDINOv2 和 iBOT。
-
-### 4. 方法与训练信号
-- 在预测 world-model loss 外增加 bisimulation representation objective。
-- 使用 action-conditioned transitions 和 test-time visual shifts 评估表示是否聚焦控制相关因素。
-- 规划仍在 latent space 中执行，以比较 representation robustness 对 downstream planning 的影响。
-
-### 5. Benchmark / 测评方法 / 结果
-- PointMaze：native background 与 5 类 background changes，报告 absolute success 和 relative degradation。
-- PushT：1,000 samples 的 data-scarcity setting，同样测试 5 类视觉 shift。
-- 结果结论：DINO-Bisim 在所有 shift benchmark 上比 DINO-WM 更稳健，并保持更小 latent。
-
-### 6. 可视化与表示分析
-有 PointMaze/PushT 的 planning failure-success 配对可视化；相同 start/goal 下展示 DINO-WM 在背景变化中失败、DINO-Bisim 仍能到达目标。
-
-### 7. 真机实验与泛化
-论文主要验证仿真视觉 OOD robustness；未报告真机实验。其泛化结论是 background/distractor shift，而非 sim-to-real。
-
-### 8. 与 OpenWAM 的关系
-可作为 OpenWAM 的 representation robustness ablation：在 V-JEPA/DINO latent 上加入 bisimulation 或 control-equivalence loss，检查预测表征是否更能忽略无关视觉因素。
-
-### 9. 局限与待核对项
-不属于完整 WAM action-generation 系统；应与 OpenWAM 的 policy success 和真机结果分开比较。
-
----
 
 <a id="paper-2605.06388-reconstruction-or-semantics"></a>
 
@@ -409,52 +265,6 @@ DreamZero 基于预训练视频扩散 backbone 联合预测未来视频和动作
 
 ---
 
-<a id="paper-2608.09073-mcr-dino-world-model"></a>
-
-来源：[papers/2608.09073-mcr-dino-world-model.md](papers/2608.09073-mcr-dino-world-model.md)
-
-## Latent World Models with Monotone Planning Costs for Image-Goal Navigation
-
-### 1. 基本信息
-- 作者：Amirhosein Chahe, Siwei Cai, Lifeng Zhou
-- 单位：Drexel University
-- 日期：2026-08-10（arXiv v1）
-- 链接：[arXiv](https://arxiv.org/abs/2608.09073) · [HTML](https://arxiv.org/html/2608.09073)
-- 类型：DINO-family latent world model + image-goal policy/planning；导航相邻工作
-
-### 2. 一句话摘要
-在冻结 DINO-family encoder 上加入 autoregressive rollout loss 和 Monotone Cost Ranking，使 latent goal distance 更可靠地排序 CEM 候选动作。
-
-### 3. 主要创新点
-- 将 planning cost ordering 单独作为训练目标，而不只追求 future prediction accuracy。
-- 研究 InfoNCE action-contrastive negatives，发现 temporal permutation negatives 会破坏 latent geometry。
-- 使用 image-goal latent distance 进行 zero-shot goal-directed navigation。
-
-### 4. 方法与训练信号
-- frozen DINO-family visual encoder。
-- autoregressive rollout loss 缩小 single-step training 与 multi-step planning gap。
-- MCR loss 让更强扰动的 action sequence 获得单调更高 planning cost。
-
-### 5. Benchmark / 测评方法 / 结果
-- GNM navigation dataset；与 Navigation World Models、DINO-WM、OmniVLA、NoMaD 比较。
-- 指标包括 image-goal navigation success 和 orientation error。
-- 摘要报告相对同 encoder DINO-WM 将 orientation error 降低 2.7×，并达到该 benchmark 的 state-of-the-art。
-
-### 6. 可视化与表示分析
-重点是 action-candidate cost curves、latent geometry 和 planning trajectory；应结合正文图表查看 cost monotonicity 是否被单独可视化。
-
-### 7. 真机实验与泛化
-- zero-shot physical robot deployment。
-- 在 unseen indoor 与 outdoor environments 中执行 goal-directed paths。
-- 这是导航而非 manipulation WAM，但可直接借鉴 goal-latent cost 与真机环境泛化协议。
-
-### 8. 与 OpenWAM 的关系
-适合为 OpenWAM 增加“预测质量之外的 planning-cost calibration”实验，检查 future latent 是否真的能正确排序 action chunks。
-
-### 9. 局限与待核对项
-需补录机器人平台、真机 trial 数、GNM task split、DINO-family encoder 具体型号和 success-rate 完整表。
-
----
 
 <a id="paper-2608.09381-jepa-wam-joint"></a>
 

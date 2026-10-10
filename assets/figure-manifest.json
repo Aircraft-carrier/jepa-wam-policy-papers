@@ -20,27 +20,6 @@
     "asset_url": "https://arxiv.org/html/2512.24497v4/train_plan_schema.png",
     "score": 99
   },
-  "2602.11832-jepa-vla": {
-    "path": "assets/figures/2602.11832-jepa-vla.png",
-    "caption": "Figure 4 : JEPA-VLA fusion architecture. (a) For VLAs without large-scale robotic pretraining, V-JEPA 2 representations are concatenated as additional input embeddings. (b) For VLAs pretrained on large-scale robotic datasets, we integrate V-JEPA 2 representations using gated cross-attention, which enables adaptive fusion while preserving pretrained priors.",
-    "source_url": "https://arxiv.org/html/2602.11832",
-    "asset_url": "https://arxiv.org/html/2602.11832v1/jepa-vla.png",
-    "score": 21
-  },
-  "2602.15922-dreamzero": {
-    "path": "assets/figures/2602.15922-dreamzero.png",
-    "caption": "Figure 4 : Model Architecture of DreamZero . The model takes three inputs: visual context (encoded via a VAE), language instructions (via a text encoder), and proprioceptive state (via a state encoder). These are processed by an autoregressive DiT backbone using flow matching, which jointly predicts future video frames and actions through separate decoders. During training (left), for each chunk, the model denoises noisy video and action latents conditioned on clean video context. During inference (right), predictions are executed asynchronously in the real world, and ground-truth observations are fed back into the KV cache to prevent error accumulation.",
-    "source_url": "https://arxiv.org/html/2602.15922",
-    "asset_url": "https://arxiv.org/html/2602.15922v1/dreamzero_model.png",
-    "score": 34
-  },
-  "2602.18639-jepa-bisim": {
-    "path": "assets/figures/2602.18639-jepa-bisim.png",
-    "caption": "Figure 3 : Model architecture and training objectives.",
-    "source_url": "https://arxiv.org/html/2602.18639",
-    "asset_url": "https://arxiv.org/html/2602.18639v2/arch_JEPA_bisim.png",
-    "score": 34
-  },
   "2605.06388-reconstruction-or-semantics": {
     "path": "assets/figures/2605.06388-reconstruction-or-semantics.png",
     "caption": "Figure 1 : Which latent space makes a better robotic world model? For a latent diffusion model, we fix the Diffusion Transformer (DiT) transition model, action conditioning, and training data. We vary only the encoder f ϕ f_{\\phi} defined latent interface: encoder, optional compression adapter, and the associated decoder path. This isolates how reconstruction-aligned and semantic representations affect action-faithful dynamics, generated rollouts, and downstream policy performance for robot control. We show the encoder families compared in the bottom panels.",
@@ -54,13 +33,6 @@
     "source_url": "https://arxiv.org/html/2605.07079",
     "asset_url": "https://arxiv.org/html/2605.07079v2/rla-1.svg",
     "score": 41
-  },
-  "2608.09073-mcr-dino-world-model": {
-    "path": "assets/figures/2608.09073-mcr-dino-world-model.png",
-    "caption": "Figure 1: Latent world model with monotone planning cost. (Architecture, top.) A frozen DINO-family encoder maps the current observation o 1 o_{1} to patch features z 1 z_{1} ; an AdaLN ViT predictor then rolls out H H steps autoregressively, conditioned on actions ( a 1 , … , a H ) (a_{1},\\ldots,a_{H}) , to produce embeddings z ^ 2 , … , z ^ H \\hat{z}_{2},\\ldots,\\hat{z}_{H} entirely in latent space. The planning cost compares the predicted final embedding to the goal embedding z g z_{g} (encoded from o g o_{g} ; shared encoder weights). (Losses, bottom.) The rollout loss ℒ rollout \\mathcal{L}_{\\mathrm{rollout}} trains the predictor on its own prior outputs, closing the train/test gap with multi-step CEM rollout. The Monotone Cost Ranking (MCR) loss ℒ mcr \\mathcal{L}_{\\mathrm{mcr}} applies a pairwise margin-ranking loss over graded action perturbations, shaping the cosine cost landscape to be monotone near the goal (right).",
-    "source_url": "https://arxiv.org/html/2608.09073",
-    "asset_url": "https://arxiv.org/html/2608.09073v1/figures/teaser/worldmodel_outside_start.png",
-    "score": 26
   },
   "2608.09381-jepa-wam-joint": {
     "path": "assets/figures/2608.09381-jepa-wam-joint.png",
