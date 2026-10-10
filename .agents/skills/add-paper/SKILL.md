@@ -41,6 +41,7 @@ After writing the card, update only the entries supported by the source:
 - `references.bib`: add or update the arXiv-keyed BibTeX entry.
 - `search-log.md`: record discovery query, source URL, inclusion reason, and date.
 - `all-papers.md`: regenerate or update the complete digest so the new card appears exactly once.
+- `assets/figure-manifest.json` and `assets/figures/`: extract one core architecture/method figure when the primary paper HTML exposes one, preserving the original caption and source URL.
 
 Do not silently fill missing fields. Use “待核对”, “未见明确分析”, or “原文未报告” with a precise explanation.
 
@@ -52,6 +53,8 @@ Run from the repository root:
 python scripts/build_site.py
 python -m py_compile scripts/build_site.py
 ```
+
+If the paper has a new or corrected core figure, run `python scripts/extract_core_figures.py` before rebuilding. Review the selected caption rather than blindly accepting an automatically selected result.
 
 Then verify:
 

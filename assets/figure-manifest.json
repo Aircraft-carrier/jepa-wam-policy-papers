@@ -1,0 +1,142 @@
+{
+  "2411.04983-dino-wm": {
+    "path": "assets/figures/2411.04983-dino-wm.png",
+    "caption": "Figure 1: We present DINO-WM , a method for training visual models by using pretrained DINOv2 embeddings of image frames (a). Once trained, given a target observation o T o_{T} , we can directly optimize agent behavior by planning through DINO-WM using model predictive control (b). The use of pretrained embeddings significantly improves performance over prior state-of-the-art world models (c).",
+    "source_url": "https://arxiv.org/html/2411.04983",
+    "asset_url": "https://arxiv.org/html/2411.04983v2/figures/intro.png",
+    "score": 29
+  },
+  "2506.09985-v-jepa-2": {
+    "path": "assets/figures/2506.09985-v-jepa-2.png",
+    "caption": "Figure 1 : V-JEPA 2 Overview. Leveraging 1M hours of internet-scale video and 1M images, we pretrain the V-JEPA 2 video model using a visual mask denoising objective ( Bardes et al., 2024 ; Assran et al., 2023 ) , and leverage this model for downstream tasks such as action classification, object recognition, action anticipation, and Video Question Answering by aligning the model with an LLM backbone. After pretraining, we can also freeze the video encoder and train a new action-conditioned predictor with a small amount of robot interaction data on top of the learned representations, and leverage this action-conditioned model, V-JEPA 2-AC, for downstream robot manipulation tasks using planning within a model predictive control loop.",
+    "source_url": "https://arxiv.org/html/2506.09985",
+    "asset_url": "https://arxiv.org/html/2506.09985v1/flowchart.png",
+    "score": 23
+  },
+  "2512.24497-what-drives-jepa-wm": {
+    "path": "assets/figures/2512.24497-what-drives-jepa-wm.png",
+    "caption": "Figure 1 : Left: Training of JEPA-WM: the encoder E ϕ , θ E_{\\phi,\\theta} embeds video and optionally proprioceptive observation, which is fed to the predictor P θ P_{\\theta} , along with actions, to predict (in parallel across timesteps) the next state embedding. Right: Planning with JEPA-WM: sample action sequences, unroll the predictor on them, compute a planning cost L p L^{p} for each trajectory, and use this cost to iteratively refine the action sampling. The action encoder A θ A_{\\theta} and proprioceptive encoder E θ p ​ r ​ o ​ p E_{\\theta}^{prop} are not explicitly displayed in this figure for readability.",
+    "source_url": "https://arxiv.org/html/2512.24497",
+    "asset_url": "https://arxiv.org/html/2512.24497v4/train_plan_schema.png",
+    "score": 99
+  },
+  "2602.11832-jepa-vla": {
+    "path": "assets/figures/2602.11832-jepa-vla.png",
+    "caption": "Figure 4 : JEPA-VLA fusion architecture. (a) For VLAs without large-scale robotic pretraining, V-JEPA 2 representations are concatenated as additional input embeddings. (b) For VLAs pretrained on large-scale robotic datasets, we integrate V-JEPA 2 representations using gated cross-attention, which enables adaptive fusion while preserving pretrained priors.",
+    "source_url": "https://arxiv.org/html/2602.11832",
+    "asset_url": "https://arxiv.org/html/2602.11832v1/jepa-vla.png",
+    "score": 21
+  },
+  "2602.15922-dreamzero": {
+    "path": "assets/figures/2602.15922-dreamzero.png",
+    "caption": "Figure 4 : Model Architecture of DreamZero . The model takes three inputs: visual context (encoded via a VAE), language instructions (via a text encoder), and proprioceptive state (via a state encoder). These are processed by an autoregressive DiT backbone using flow matching, which jointly predicts future video frames and actions through separate decoders. During training (left), for each chunk, the model denoises noisy video and action latents conditioned on clean video context. During inference (right), predictions are executed asynchronously in the real world, and ground-truth observations are fed back into the KV cache to prevent error accumulation.",
+    "source_url": "https://arxiv.org/html/2602.15922",
+    "asset_url": "https://arxiv.org/html/2602.15922v1/dreamzero_model.png",
+    "score": 34
+  },
+  "2602.18639-jepa-bisim": {
+    "path": "assets/figures/2602.18639-jepa-bisim.png",
+    "caption": "Figure 3 : Model architecture and training objectives.",
+    "source_url": "https://arxiv.org/html/2602.18639",
+    "asset_url": "https://arxiv.org/html/2602.18639v2/arch_JEPA_bisim.png",
+    "score": 34
+  },
+  "2605.06388-reconstruction-or-semantics": {
+    "path": "assets/figures/2605.06388-reconstruction-or-semantics.png",
+    "caption": "Figure 1 : Which latent space makes a better robotic world model? For a latent diffusion model, we fix the Diffusion Transformer (DiT) transition model, action conditioning, and training data. We vary only the encoder f ϕ f_{\\phi} defined latent interface: encoder, optional compression adapter, and the associated decoder path. This isolates how reconstruction-aligned and semantic representations affect action-faithful dynamics, generated rollouts, and downstream policy performance for robot control. We show the encoder families compared in the bottom panels.",
+    "source_url": "https://arxiv.org/html/2605.06388",
+    "asset_url": "https://arxiv.org/html/2605.06388v1/figures/main-fig-frames/frame_3_t33.png",
+    "score": 14
+  },
+  "2605.07079-rla-wm": {
+    "path": "assets/figures/2605.07079-rla-wm.svg",
+    "caption": "Figure 1 : Overview of our framework. We introduce the Residual Latent Action (RLA), which compresses the DINO token residual s t + h − s t s_{t+h}-s_{t} into a compact latent z z . We discover that RLA is predictive, generalizable, and encodes temporal progression. Next, we propose the RLA World Model (RLA-WM), which learns from offline videos and predicts RLA z z instead of s t + h s_{t+h} directly. RLA-WM achieves accurate future prediction while being more efficient than state-of-the-art feature-based and video diffusion world models. Our approach enables two applications: learning policies from actionless videos and visual reinforcement learning via interaction entirely within RLA-WM.",
+    "source_url": "https://arxiv.org/html/2605.07079",
+    "asset_url": "https://arxiv.org/html/2605.07079v2/rla-1.svg",
+    "score": 41
+  },
+  "2608.09073-mcr-dino-world-model": {
+    "path": "assets/figures/2608.09073-mcr-dino-world-model.png",
+    "caption": "Figure 1: Latent world model with monotone planning cost. (Architecture, top.) A frozen DINO-family encoder maps the current observation o 1 o_{1} to patch features z 1 z_{1} ; an AdaLN ViT predictor then rolls out H H steps autoregressively, conditioned on actions ( a 1 , … , a H ) (a_{1},\\ldots,a_{H}) , to produce embeddings z ^ 2 , … , z ^ H \\hat{z}_{2},\\ldots,\\hat{z}_{H} entirely in latent space. The planning cost compares the predicted final embedding to the goal embedding z g z_{g} (encoded from o g o_{g} ; shared encoder weights). (Losses, bottom.) The rollout loss ℒ rollout \\mathcal{L}_{\\mathrm{rollout}} trains the predictor on its own prior outputs, closing the train/test gap with multi-step CEM rollout. The Monotone Cost Ranking (MCR) loss ℒ mcr \\mathcal{L}_{\\mathrm{mcr}} applies a pairwise margin-ranking loss over graded action perturbations, shaping the cosine cost landscape to be monotone near the goal (right).",
+    "source_url": "https://arxiv.org/html/2608.09073",
+    "asset_url": "https://arxiv.org/html/2608.09073v1/figures/teaser/worldmodel_outside_start.png",
+    "score": 26
+  },
+  "2608.09381-jepa-wam-joint": {
+    "path": "assets/figures/2608.09381-jepa-wam-joint.png",
+    "caption": "Figure 3: Overview of JEPA-WAM. A frozen V-JEPA encoder constructs a spatially structured joint current–future target for latent transition prediction. The shared predictor learns task-shared visual temporal structure from the current observation, while subsequent action representations integrate the visual context and task instruction to condition the action expert. The target branch is used only during training.",
+    "source_url": "https://arxiv.org/html/2608.09381",
+    "asset_url": "https://arxiv.org/html/2608.09381v1/framework.png",
+    "score": 20
+  },
+  "2609.09630-jepa-policy": {
+    "path": "assets/figures/2609.09630-jepa-policy.jpg",
+    "caption": "Fig. 2: Overall architecture of JEPA Policy. A shared encoder processes both observations. 𝐳 t \\mathbf{z}_{t} and 𝐳 t + k \\mathbf{z}_{t+k} are the outputs of its image path at the two times. The conditioning vector 𝐜 t \\mathbf{c}_{t} fuses 𝐳 t \\mathbf{z}_{t} with low-dimensional inputs (Sec. III-B ); the fusion is omitted from the diagram. Action tokens 𝐪 a \\mathbf{q}_{a} and future-representation tokens 𝐪 z \\mathbf{q}_{z} enter one Transformer T θ T_{\\theta} and interact in every self-attention layer. Separate heads produce the action sequence 𝐚 ^ t : t + H \\hat{\\mathbf{a}}_{t:t+H} and future observation representation 𝐳 ^ t + k \\hat{\\mathbf{z}}_{t+k} . The same encoder produces the stopped target 𝐳 t + k = E rgb ​ ( o t + k ) \\mathbf{z}_{t+k}=E_{\\mathrm{rgb}}(o_{t+k}) . Shared processing allows the future-prediction objective to update the representation used by the action head.",
+    "source_url": "https://arxiv.org/html/2609.09630",
+    "asset_url": "https://arxiv.org/html/2609.09630v1/figures/fig2.jpg",
+    "score": 24
+  },
+  "2609.10506-duet-dino": {
+    "path": "assets/figures/2609.10506-duet-dino.png",
+    "caption": "Fig. 3: Overview of the proposed simultaneous cross-view world modeling method, showing predicted dual-view latent rollouts, CEM action planning using predicted and goal latents, and the normalized dual-view planning cost J ⁡ ( z g , z ^ T ) J(z_{\\mathrm{g}},\\hat{z}_{T}) .",
+    "source_url": "https://arxiv.org/html/2609.10506",
+    "asset_url": "https://arxiv.org/html/2609.10506v1/LatentPlanning.png",
+    "score": 27
+  },
+  "2609.20277-jepa-wam-visual-instruction": {
+    "path": "assets/figures/2609.20277-jepa-wam-visual-instruction.png",
+    "caption": "Figure 1: Overview of JEPA-WAM. For each language instruction ℓ \\ell , we construct a visual-instruction bank ℬ ℓ \\mathcal{B}_{\\ell} containing K K images sampled from an instruction-conditioned text-to-image generator. One visual instruction is randomly sampled and encoded by frozen V-JEPA 2.1 and a learnable projector into compact representations Z ℓ Z_{\\ell} at each training step. These representations condition the video and action experts together with the task instruction and current observations. The right panel shows the self- and cross-attention masks used during training and inference.",
+    "source_url": "https://arxiv.org/html/2609.20277",
+    "asset_url": "https://arxiv.org/html/2609.20277v1/Figures/jepa_wam_architecture.png",
+    "score": 20
+  },
+  "2609.27455-lewam-ijepa": {
+    "path": "assets/figures/2609.27455-lewam-ijepa.svg",
+    "caption": "Figure 2: Comparison of WAM architectures. (a) Action-centered VDM-based WAMs use compressed VAE latents as visual inputs and jointly learn action generation and future frame prediction, but generate only actions at inference. (b) LaWAM ( Chen et al., 2026 ) predicts latent actions from VLM representations and uses a separate world model to predict future DINOv3 embeddings, which condition action generation at inference. (c) VLA-JEPA ( Sun et al., 2026 ) generates actions from VLM representations and uses latent action tokens to condition a separate world model supervised by V-JEPA2 embeddings during training. (d) LeWAM ses frozen I-JEPA embeddings as both visual inputs for action generation and targets for action-conditioned future prediction, learning both tasks with a single predictor while generating only actions at inference.",
+    "source_url": "https://arxiv.org/html/2609.27455v2",
+    "asset_url": "https://arxiv.org/html/2609.27455v2/wam_architectures.svg",
+    "score": 37
+  },
+  "2609.37250-vjepa-policy": {
+    "path": "assets/figures/2609.37250-vjepa-policy.png",
+    "caption": "Figure 1: Overview of V-JEPA Policy. A frozen V-JEPA 2.1 encoder defines the visual latent space. The future predictor jointly processes context tokens and learnable future queries in a single forward pass, providing layer-wise, future-informed context key–value states to a flow-matching action expert. Both modules receive language and proprioceptive conditioning and are jointly trained from scratch with future-latent regression and action flow matching.",
+    "source_url": "https://arxiv.org/html/2609.37250",
+    "asset_url": "https://arxiv.org/html/2609.37250v1/V-JEPA-Policy-zy-v1.png",
+    "score": 12
+  },
+  "2609.38163-rewam": {
+    "path": "assets/figures/2609.38163-rewam.png",
+    "caption": "Figure 1 : Overview of representations for world-action modeling. Top-left: Video-VAE latents are optimized for visual reconstruction. Top-right: Frozen DINO features inherit priors from perceptual pre-training. Bottom: ReWAM uses a Temporal Representation Bottleneck (TRB) to form compact world states from calibrated DINO features. Action-Grounded Representation Shaping (AGRS) trains the TRB through asymmetric routing of action-loss gradients, while the world model learns state transitions.",
+    "source_url": "https://arxiv.org/html/2609.38163",
+    "asset_url": "https://arxiv.org/html/2609.38163v1/1_overview_.png",
+    "score": 38
+  },
+  "2610.06965-acg-wam": {
+    "path": "assets/figures/2610.06965-acg-wam.png",
+    "caption": "Fig. 2: Training architecture of ACG-WAM. Motus predicts video and actions. The auxiliary predictor uses features of the current frame, demonstrated actions, and a horizon to predict the geometric target. Future images provide teacher targets without entering the student’s visual input. The auxiliary loss updates the shared patch embedding; the base losses train the backbone.",
+    "source_url": "https://arxiv.org/html/2610.06965",
+    "asset_url": "https://arxiv.org/html/2610.06965v1/figure_architecture_v4.png",
+    "score": 26
+  },
+  "2610.10515-robojepa": {
+    "path": "assets/figures/2610.10515-robojepa.png",
+    "caption": "Figure 3: RoboJEPA training. The frozen V-JEPA 2.1 encoder f f ( Mur-Labadia et al., 2026 ) maps the input multiview frames x t ( 1 : V ) x_{t}^{(1:V)} to a grid of features. The predictor g θ g_{\\theta} consumes per-step sequences of multiview visual ( z t ( 1 : V ) z_{t}^{(1:V)} ), action ( a t a_{t} ) and proprioceptive state ( s t s_{t} ) tokens, conditioned on view and embodiment identifiers, and predicts the next-step features z ^ t + 1 \\hat{z}_{t+1} . Training minimises two losses: (left) the teacher-forcing loss , the per-token ℓ 1 \\ell_{1} distance between predicted features and the next-step features from the encoder ( Equation 5 ); and (right) the rollout loss , which attempts to predict the same target sequence as the teacher-forcing loss, but given fewer input frames. The model is given the full training sequence of actions but only a prefix of the encoded features, and predicts the remaining features autoregressively, with a KV-cache. This way the model learns to make accurate long term predictions.",
+    "source_url": "https://arxiv.org/html/2610.10515",
+    "asset_url": "https://arxiv.org/html/2610.10515v1/robojepa_kvcache_figure.png",
+    "score": 99
+  },
+  "2610.12285-plaw-vla": {
+    "path": "assets/figures/2610.12285-plaw-vla.png",
+    "caption": "Figure 2: PLaW-VLA overview. Three experts share structured attention for semantic grounding, latent future prediction, and continuous action generation. The world model predicts future representations in a frozen V-JEPA 2 latent space using learnable queries. The action expert attends to the resulting future prediction tokens together with the observed context.",
+    "source_url": "https://arxiv.org/html/2610.12285",
+    "asset_url": "https://arxiv.org/html/2610.12285v1/framework.png",
+    "score": 23
+  },
+  "2610.12407-lewam": {
+    "path": "assets/figures/2610.12407-lewam.png",
+    "caption": "Figure 1: The four training modes on one window: the mode is set by what is masked at the transformer’s input. Nothing is decoded to pixels.",
+    "source_url": "https://arxiv.org/html/2610.12407",
+    "asset_url": "https://arxiv.org/html/2610.12407v1/figures/method/modes.png",
+    "score": 12
+  }
+}
