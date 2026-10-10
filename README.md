@@ -49,6 +49,9 @@
 - [ReWAM](papers/2609.38163-rewam.md)
 - [What Drives Success in Physical Planning with JEPA-WMs](papers/2512.24497-what-drives-jepa-wm.md)
 - [Reconstruction or Semantics?](papers/2605.06388-reconstruction-or-semantics.md)
+- [VO-DP: Semantic-Geometric Adaptive Diffusion Policy](papers/2510.15530-vo-dp-feature-fusion.md)
+- [HiPolicy: Hierarchical Multi-Frequency Action Chunking](papers/2604.06067-hipolicy-multifrequency.md)
+- [GIFT: Guided Intermediate Feature Training](papers/2609.04193-gift-intermediate-feature.md)
 
 - [LeWAM：Latent evolving World Action Model（I-JEPA）](papers/2609.27455-lewam-ijepa.md)
 

@@ -31,6 +31,9 @@
 | 2026-09-29 | 2609.38163 | ReWAM | 已整理 |
 | 2025-12-30 | 2512.24497 | JEPA-WM design study | 已整理 |
 | 2026-05-07 | 2605.06388 | Semantic vs reconstruction encoder study | 已整理 |
+| 2026-09-03 | 2609.04193 | GIFT / guided intermediate feature training | 已整理 |
+| 2025-10-17 | 2510.15530 | VO-DP / semantic-geometric intermediate feature fusion | 已整理 |
+| 2026-04-07 | 2604.06067 | HiPolicy / hierarchical multi-frequency feature fusion | 已整理 |
 
 ## 后续增量扫描
 
@@ -49,3 +52,9 @@
 
 - `2609.27455`，首次提交 2026-09-23，阅读 v2（2026-09-24）。已新增卡片、总表、encoder 索引及 BibTeX。
 - 关键消歧：I-JEPA LeWAM（Xueji Fang 等，2609.27455）≠ NVIDIA LeWAM（Shashank Hegde 等，2610.12407）。
+
+## 中间多层/层级特征融合补充（2026-10-10）
+
+- `2609.04193` GIFT：直接研究 action pathway 共享的 intermediate visual features，用 geometry、affordance、goal 三类结构监督覆盖 VLA 与 WAM。
+- `2510.15530` VO-DP：融合 VGGT 内的 DINOv2 semantic features 与 geometric features，使用 cross-attention 和 CNN compression 进入 diffusion policy。
+- `2604.06067` HiPolicy：融合不同 temporal frequency 的 observation features；属于层级/多频 feature fusion，需与 frozen foundation encoder 的 transformer intermediate-layer fusion 分开标记。

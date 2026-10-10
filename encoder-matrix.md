@@ -16,6 +16,9 @@
 | V-JEPA / V-JEPA 2 + DINO comparisons | What Drives Success in JEPA-WMs | controlled encoder/planner study | CEM/GD/Nevergrad latent planning | MetaWorld、Maze、Push-T、Wall、RoboCasa | DROID real-world data |
 | V-JEPA 2.1 + Web-DINO + SigLIP 2 | Reconstruction or Semantics? | fixed DiT world-model encoder ablation | policy-in-the-loop + CEM | BridgeV2 ID/OOD | hardware split待核 |
 | I-JEPA-H/14 | LeWAM：Latent evolving World Action Model（2609.27455） | frozen encoder + AdaFuse + joint future/action + DemoDPO | shared predictor / flow action generation | RoboTwin Avg. 92.28% | 双 Piper；3 tasks、50 rollouts/task；真机 task progress |
+| Intermediate visual features（跨架构） | GIFT | geometry / affordance / goal structural supervision | shared action pathway；VLA、Fast-WAM、IDM-WAM | LIBERO-Plus、RoboCasa | 七类 visual/spatial shifts；真机协议待核 |
+| DINOv2 + VGGT geometric features | VO-DP | Semantic-Geometric Fuser + cross-attention + CNN compression | diffusion policy conditioning | RoboTwin 1.0、真实四任务 | size、appearance、background、illumination robustness |
+| Hierarchical observation features | HiPolicy | multi-frequency history + hierarchical FiLM + global cross-frequency fusion | multi-frequency action chunks | RoboTwin 1.0/2.0、8 real tasks | Franka；随机物体初始化；temporal hierarchy |
 
 ## 选型结论
 
@@ -24,3 +27,4 @@
 - **想研究 planner robustness**：DINO-WM、JEPA-Bisim、MCR DINO WM、What Drives Success in JEPA-WMs。
 - **想研究 action-conditioned representation**：RLA-WM、DUET-DINO、ReWAM。
 - **I-JEPA**：`2609.27455` 明确使用冻结 I-JEPA-H/14 做 WAM，并与 DINOv3/V-JEPA 2 比较。此前“没有找到”的表述是检索遗漏，已在用户提供该论文后纠正。
+- **中间特征融合新增对照**：GIFT 是 intermediate visual feature structural supervision；VO-DP 是 DINOv2/VGGT semantic-geometric fusion；HiPolicy 是 temporal multi-frequency feature fusion，不能把后者等同为 foundation encoder transformer layer fusion。

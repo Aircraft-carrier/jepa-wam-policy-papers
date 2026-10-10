@@ -1,7 +1,7 @@
 # JEPA / WAM / Policy 论文完整合辑
 
 > 合并日期：2026-10-10（Asia/Shanghai）。
-> 来源：本目录 `papers/` 下的全部 20 篇 Markdown 论文卡片，按源文件名（arXiv ID）升序排列。
+> 来源：本目录 `papers/` 下的全部 23 篇 Markdown 论文卡片，按源文件名（arXiv ID）整理。
 > 本文件完整保留各卡片内容，仅调整标题层级并增加目录、定位锚点和源文件入口；不是摘要版。
 > 原文中的“待核对”、不确定性及指标口径一并保留；合并不代表新增事实核验。
 > 本文件是当前快照；源卡片后续修改不会自动同步到合辑。
@@ -28,6 +28,9 @@
 18. [RoboJEPA: Scaling Robotic Latent World Models](#paper-2610.10515-robojepa) · [独立卡片](papers/2610.10515-robojepa.md)
 19. [PLaW-VLA: Predictive Latent World Modeling for Vision-Language-Action Policies](#paper-2610.12285-plaw-vla) · [独立卡片](papers/2610.12285-plaw-vla.md)
 20. [LeWAM: A JEPA World Action Model with Diffusion-Steering-Based MPC](#paper-2610.12407-lewam) · [独立卡片](papers/2610.12407-lewam.md)
+21. [VO-DP: Semantic-Geometric Adaptive Diffusion Policy for Vision-Only Robotic Manipulation](#paper-2510.15530-vo-dp-feature-fusion) · [独立卡片](papers/2510.15530-vo-dp-feature-fusion.md)
+22. [HiPolicy: Hierarchical Multi-Frequency Action Chunking for Policy Learning](#paper-2604.06067-hipolicy-multifrequency) · [独立卡片](papers/2604.06067-hipolicy-multifrequency.md)
+23. [GIFT: Guided Intermediate Feature Training via Action-Oriented Structural Supervision for Robotic Manipulation](#paper-2609.04193-gift-intermediate-feature) · [独立卡片](papers/2609.04193-gift-intermediate-feature.md)
 
 ---
 
@@ -996,3 +999,147 @@ DreamZero 基于预训练视频扩散 backbone 联合预测未来视频和动作
 
 ### 9. 局限与待核对项
 作者单位已从正文确认是 NVIDIA；仍需补录六任务完整逐项 success 表和各 planner 的完整对照数值。
+
+---
+
+<a id="paper-2510.15530-vo-dp-feature-fusion"></a>
+
+来源：[papers/2510.15530-vo-dp-feature-fusion.md](papers/2510.15530-vo-dp-feature-fusion.md)
+
+## VO-DP: Semantic-Geometric Adaptive Diffusion Policy for Vision-Only Robotic Manipulation
+
+### 1. 基本信息
+- 作者：Zehao Ni, Yonghao He, Lingfeng Qian, Jilei Mao, Fa Fu, Wei Sui, Hu Su, Junran Peng, Zhipeng Wang, Bin He。
+- 单位：D-Robotics；National Key Laboratory of Autonomous Intelligent Unmanned Systems；Frontiers Science Center for Intelligent Autonomous Systems；Shanghai Institute of Intelligent Science and Technology, Tongji University；Institute of Automation, Chinese Academy of Sciences；University of Science and Technology Beijing。
+- 日期：首次提交 2025-10-17；阅读版本 v4，更新于 2026-10-10。
+- 链接：[arXiv](https://arxiv.org/abs/2510.15530) · [HTML v4](https://arxiv.org/html/2510.15530v4) · [PDF](https://arxiv.org/pdf/2510.15530) · [代码/训练库](https://github.com/D-Robotics-AI-Lab/VO-DP)。
+- 类型：直接相关；冻结视觉基础模型中间特征融合到 diffusion policy。
+
+### 2. 一句话摘要
+VO-DP 从 VGGT 内部的 DINOv2 语义特征和 geometric features 中提取多层视觉信息，用 Semantic-Geometric Fuser 与 cross-attention 融合，再通过 CNN compression 提供给 vision-only diffusion policy。
+
+### 3. 主要创新点
+- 不使用深度/点云作为 policy 输入，而是利用大视觉模型内部的语义与几何中间特征构造视觉条件。
+- VGGT encoder 同时提供 DINOv2 patch-level semantic features 和 AA network 产生的 geometric features；Semantic-Geometric Fuser 通过残差 cross-attention 融合二者。
+- 比较 multi-frame VO-DP 与 single-frame VO-DP-1，并做物体尺寸、外观、背景颜色和光照的真实世界鲁棒性评测。
+
+### 4. 方法与训练信号
+- 输入为单视角 RGB 图像；VGGT 对 patchified images 产生语义与几何特征，使用 cross-attention 做 per-frame semantic-geometric fusion。
+- 融合后的视觉特征经过 CNN compression，再作为 diffusion policy 的条件；方法重点在 encoder intermediate feature extraction/fusion，而不是重新训练一个 point-cloud perception stack。
+- VO-DP-1 使用单帧输入，VO-DP 使用时间窗口；正文 Table I/II 和 Figure 2 对应模型结构与训练配置。
+
+### 5. Benchmark / 测评方法 / 结果
+**RoboTwin 1.0 仿真，14 个双臂 manipulation tasks（Table II）。** 摘要报告 VO-DP 平均 success rate 64.6%，DP3 为 64.0%，DP 为 34.8%。
+
+**真实世界四任务（Table V）。** VO-DP 平均 success rate 87.9%，DP3 为 67.5%，DP 为 11.2%；正文还报告尺寸、外观、背景颜色和光照 robustness。
+
+### 6. 可视化与表示分析
+- Figure 2 是 VO-DP overall architecture，展示 VGGT/DINOv2 semantic branch、geometric branch、Semantic-Geometric Fuser、CNN compression 和 policy head。
+- Figure 3、Figure 6/9 展示 RoboTwin 任务、真实设备和四类 robustness 设置。
+
+### 7. 真机实验与泛化
+- 真实世界四个 manipulation tasks；比较 vision-only DP、point-cloud DP3 与 VO-DP。
+- 测试 unseen cube size、cube appearance、background color 和 illumination；VO-DP 不依赖深度传感器点云。
+
+### 8. 与 OpenWAM 的关系
+可作为 OpenWAM 的 encoder-side baseline：比较 DINO/V-JEPA/几何 foundation features 的中间层融合、cross-attention 与 compression，并将 fused representation 作为 future-target 或 action expert 输入。
+
+### 9. 局限与待核对项
+- VGGT 内部特征的具体层位、冻结/微调状态和 feature dimension 需结合代码核对。
+- 主要对照是 DP/DP3 与 vision-only manipulation，不能直接等同于 JEPA latent WAM 的 future prediction 结果。
+
+---
+
+<a id="paper-2604.06067-hipolicy-multifrequency"></a>
+
+来源：[papers/2604.06067-hipolicy-multifrequency.md](papers/2604.06067-hipolicy-multifrequency.md)
+
+## HiPolicy: Hierarchical Multi-Frequency Action Chunking for Policy Learning
+
+### 1. 基本信息
+- 作者：Jiyao Zhang, Zimu Han, Junhan Wang, Xionghao Wu, Shihong Lin, Jinzhou Li, Hongwei Fan, Ruihai Wu, Dongjiang Li, Hao Dong。
+- 单位：CFCS, School of Computer Science, Peking University；National Key Laboratory for Multimedia Information Processing, Peking University；Xi'an Jiaotong University；Tsinghua University；Beijing University of Aeronautics and Astronautics；Jingdong Technology Information Technology Co., Ltd。
+- 日期：首次提交 2026-04-07；阅读版本 v1，更新于 2026-10-10。
+- 链接：[arXiv](https://arxiv.org/abs/2604.06067) · [HTML](https://arxiv.org/html/2604.06067) · [PDF](https://arxiv.org/pdf/2604.06067)。
+- 类型：邻近相关；层级 observation feature fusion 与多频 action chunk policy。
+
+### 2. 一句话摘要
+HiPolicy 从不同时间频率的 observation history 提取层级特征，同时预测不同频率的 action chunks，并通过 hierarchical FiLM、global feature fusion 和 entropy-guided execution 平衡长时规划与精细闭环控制。
+
+### 3. 主要创新点
+- 将 imitation policy 的 temporal resolution 分成多个频率，联合建模 coarse long-horizon actions 与 fine-grained reactive actions。
+- 用对应频率的 observation features 条件化对应频率的 action chunks，并通过 cross-attention 做 global feature fusion。
+- 推理阶段通过多次 stochastic sampling 估计 action entropy，自适应选择执行频率。
+
+### 4. 方法与训练信号
+- 从 raw observation chunk 中按不同频率抽取历史帧，经 observation encoder 得到 hierarchical observation features；视觉输入可为 2D images 或 3D point clouds，proprioception 可选。
+- hierarchical FiLM 将每个频率的 observation feature 与同频 action feature 对齐；global feature fusion 跨频率做 attention 通信。
+- 多频 noisy action chunks 拼接后由 1D-CNN U-Net diffusion model 预测噪声。
+
+### 5. Benchmark / 测评方法 / 结果
+**仿真：RoboTwin 1.0 与 RoboTwin 2.0，共 24 个 manipulation tasks。** DP/DP+HiPolicy 每任务 100 episodes；DP3 变体遵循 DP3 protocol，每任务 100 episodes。移除 hierarchical feature fusion 会造成约 6% 的性能下降。
+
+**真实世界（Figure 5、Table 5）。** Franka Panda 7-DoF + Robotiq 2F-85，8 个 manipulation tasks，每任务平均 10 trials；相对 DP baseline，HiPolicy 报告 42% relative higher success rate 和 14% faster execution speed。
+
+### 6. 可视化与表示分析
+- Figure 3 展示 hierarchical observation features、FiLM fusion、global cross-frequency fusion 和多频 action chunks。
+- Figure 4 展示 entropy-guided execution；Table 2/3/4 及 Appendix E.3 分析 feature fusion、采样次数、history、chunk size 和 frequency levels。
+
+### 7. 真机实验与泛化
+- 使用 Franka Panda、Robotiq 2F-85 和三台 ZED 系列相机；8 个真实世界任务，每任务 10 次评测，随机化初始物体。
+- 仿真覆盖 RoboTwin 1.0/2.0，重点测试 long-horizon 与 high-precision tasks。
+
+### 8. 与 OpenWAM 的关系
+HiPolicy 适合迁移到 OpenWAM 的 action expert：把不同历史时间尺度的 latent features 分层，再比较 FiLM、cross-attention/global fusion 对 future prediction 和 action generation 的影响。
+
+### 9. 局限与待核对项
+- “多层/多频”主要是不同时间频率的 observation features，不等同于 frozen foundation encoder 的 transformer intermediate-layer fusion。
+- 具体 visual encoder backbone、history 采样和所有 task-wise success 数值需参考 Appendix 与代码核对。
+
+---
+
+<a id="paper-2609.04193-gift-intermediate-feature"></a>
+
+来源：[papers/2609.04193-gift-intermediate-feature.md](papers/2609.04193-gift-intermediate-feature.md)
+
+## GIFT: Guided Intermediate Feature Training via Action-Oriented Structural Supervision for Robotic Manipulation
+
+### 1. 基本信息
+- 作者：Yupeng Zheng, Xiang Li, Songen Gu, Yuhang Zheng, Shuai Tian, Weize Li, Linbo Wang, Chaoyue Li, Qichao Zhang, Haoran Li, Zhongpu Xia, Ya-Qin Zhang, Shuicheng Yan, Dongbin Zhao。
+- 单位：Institute of Automation, Chinese Academy of Sciences；University of Chinese Academy of Sciences；National University of Singapore；Tsinghua University；Fudan University。
+- 日期：首次提交 2026-09-03；阅读版本 v1，更新于 2026-10-10。
+- 链接：[arXiv](https://arxiv.org/abs/2609.04193) · [HTML](https://arxiv.org/html/2609.04193) · [PDF](https://arxiv.org/pdf/2609.04193) · [项目页](https://openphoenix-team.github.io/GIFT-pages)。
+- 类型：直接相关；面向 VLA 与 WAM 的中间视觉特征监督框架。
+
+### 2. 一句话摘要
+GIFT 用 geometry alignment、affordance prediction 和 goal-region reconstruction 训练共享于动作路径的中间视觉特征，使 VLA、Fast-WAM 和 inverse-dynamics WAM 保留更有控制价值的结构信息。
+
+### 3. 主要创新点
+- 将机器人控制中的中间特征结构化为几何、可供性和目标区域三类监督，形成跨架构的统一训练原则。
+- 在 VLA、直接动作扩散 Fast-WAM 和 inverse-dynamics WAM 三种 action formulation 上实例化同一方法。
+- injection/no-injection 对照支持“特征内化”而非单纯给 action head 额外条件的解释。
+
+### 4. 方法与训练信号
+- GIFT 直接监督 action pathway 使用的 intermediate visual features，不固定 decoder 或动作头。
+- geometry guidance 对齐运动可行性相关的场景结构；affordance guidance 预测 instruction-relevant entities 与 object-centric end-effector 配置；goal guidance 重建语言指令确定的目标区域。
+- 三类约束在训练期施加，并比较是否将辅助预测注入 action head。
+
+### 5. Benchmark / 测评方法 / 结果
+**LIBERO-Plus，标准 LIBERO 训练后 zero-shot transfer，七类 distribution shifts。** GIFT-VLA、GIFT-WAM-Fast、GIFT-WAM-IDM 分别达到 79.6%、72.6%、87.8%，相对匹配 baseline 提升 4.6、12.6、5.2 个百分点。
+
+**RoboCasa。** GIFT-VLA、GIFT-WAM-Fast、GIFT-WAM-IDM 分别达到 61.4%、83.6%、82.3%；LIBERO 标准 ID 结果见 Table I，geometry/affordance/goal 消融见 Table IV。
+
+### 6. 可视化与表示分析
+- Figure 2 展示 GIFT 在 VLA 与两种 WAM action formulation 上的整体框架。
+- Figure 3 对比 injection 与 no-injection；Figure 5 可视化 action-to-vision attention。
+
+### 7. 真机实验与泛化
+- 已确认的定量协议集中在 LIBERO、LIBERO-Plus 与 RoboCasa；LIBERO-Plus 覆盖七类视觉/空间 distribution shifts。
+- 论文摘要提到 high-precision real-world manipulation，但独立真机平台、任务数和 trial-level success rate 仍待从正文/附录核对。
+
+### 8. 与 OpenWAM 的关系
+这是“中间特征监督”路线的直接基线：不改写 OpenWAM 的动作生成范式，而是给共享 encoder/predictor 的中间表示增加几何、可供性和目标区域约束，可用于 auxiliary representation loss、feature probing 和 no-injection ablation。
+
+### 9. 局限与待核对项
+- 不同 policy configuration 的 encoder、数据规模和 action head 细节需要按 Appendix 逐项对齐。
+- 当前已核对摘要、方法、Figure 2/3/5、LIBERO/LIBERO-Plus/RoboCasa 结果；真机平台与完整 success 协议待继续核对。

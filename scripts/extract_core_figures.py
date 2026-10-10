@@ -4,6 +4,7 @@ import html
 import json
 import re
 import sys
+import argparse
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -69,17 +70,22 @@ def figures_from_html(source: str) -> list[dict]:
 
 def main() -> None:
     FIGURES.mkdir(parents=True, exist_ok=True)
-    manifest = {}
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--only", nargs="*", help="Only process the given paper slugs")
+    args = parser.parse_args()
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
     session = requests.Session()
     session.headers.update({"User-Agent": "jepa-wam-policy-papers/1.0 figure extractor"})
     for path in sorted(PAPERS.glob("*.md")):
+        if args.only and path.stem not in args.only:
+            continue
         source = path.read_text(encoding="utf-8")
         page_url = arxiv_url(source)
         if not page_url:
             print(f"SKIP {path.stem}: no arXiv HTML/abs link", file=sys.stderr)
             continue
         try:
-            response = session.get(page_url, timeout=45)
+            response = session.get(page_url, timeout=20)
             response.raise_for_status()
             candidates = figures_from_html(response.text)
             if not candidates:
@@ -87,7 +93,7 @@ def main() -> None:
                 continue
             selected = candidates[0]
             asset_url = urljoin("https://arxiv.org/html/", selected["asset"])
-            image = session.get(asset_url, timeout=45)
+            image = session.get(asset_url, timeout=20)
             image.raise_for_status()
             suffix = Path(selected["asset"].split("?")[0]).suffix.lower() or ".png"
             if suffix not in {".png", ".jpg", ".jpeg", ".svg", ".webp"}:
@@ -101,6 +107,7 @@ def main() -> None:
                 "asset_url": asset_url,
                 "score": selected["score"],
             }
+            MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             print(f"OK {path.stem}: {selected['caption'][:100]}")
         except Exception as exc:
             print(f"SKIP {path.stem}: {exc}", file=sys.stderr)

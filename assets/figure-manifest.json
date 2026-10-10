@@ -138,5 +138,26 @@
     "source_url": "https://arxiv.org/html/2610.12407",
     "asset_url": "https://arxiv.org/html/2610.12407v1/figures/method/modes.png",
     "score": 12
+  },
+  "2510.15530-vo-dp-feature-fusion": {
+    "path": "assets/figures/2510.15530-vo-dp-feature-fusion.png",
+    "caption": "Fig. 2 : Overall architecture of VO-DP. VO-DP has four core modules: 1) VGGT Encoder extracts semantic features from patchified images via DINOv2 and generates geometric features through its AA network; 2) Semantic-Geometric Fuser fuses per-frame geometric and semantic features using residual cross-attention and an FFN; 3) Spatial Compression module reshapes fused features, downsamples them with a lightweight ResNet, and concatenates the compressed spatial features with proprioceptive observations to form compact scenario representations; 4) Vision-Only Conditioned Action Generation module employs a DDPM-based policy head to generate actions using the scenario representations.",
+    "source_url": "https://arxiv.org/html/2510.15530v4",
+    "asset_url": "https://arxiv.org/html/2510.15530v4/framework_a.png",
+    "score": 35
+  },
+  "2604.06067-hipolicy-multifrequency": {
+    "path": "assets/figures/2604.06067-hipolicy-multifrequency.png",
+    "caption": "Figure 3 : Overview of HiPolicy. We propose HiPolicy, a hierarchical multi-frequency action chunk policy with an entropy-guided adaptive execution strategy. Given a hierarchical observation history, HiPolicy predicts multi-frequency action chunks simultaneously through a diffusion-based model. During inference, HiPolicy estimates the action entropy through multiple samplings and adaptively chooses the execution frequency according to the estimated entropy.",
+    "source_url": "https://arxiv.org/html/2604.06067",
+    "asset_url": "https://arxiv.org/html/2604.06067v1/method.png",
+    "score": 25
+  },
+  "2609.04193-gift-intermediate-feature": {
+    "path": "assets/figures/2609.04193-gift-intermediate-feature.png",
+    "caption": "Fig. 2: Overview of GIFT. Given the observation, instruction and robot state, GIFT attaches three training objectives to the intermediate visual tokens of a policy: geometry alignment with a frozen geometric foundation model, object-centric affordance prediction, and instruction-conditioned goal-region prediction. The default no-injection design does not route auxiliary predictions into the action pathway; the auxiliary objectives shape the shared intermediate features only through their training gradients. We instantiate the same principle in a VLA (top) and two WAM action formulations (bottom).",
+    "source_url": "https://arxiv.org/html/2609.04193",
+    "asset_url": "https://arxiv.org/html/2609.04193v1/gift-framework.png",
+    "score": 38
   }
 }
