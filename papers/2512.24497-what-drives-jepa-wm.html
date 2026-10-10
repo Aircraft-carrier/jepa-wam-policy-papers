@@ -10,7 +10,7 @@
 </head>
 <body>
   <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">卡片总览</a><a href="../overview.html">综合表格</a><a href="../figures.html">架构图画廊</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
-  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2512.24497</p><h1>What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1><p class="paper-summary">系统研究 JEPA-WM 的 encoder、world-model architecture、training objective 和 planner，提出在 navigation 与 manipulation 上优于 DINO-WM 和 V-JEPA 2-AC 的组合 recipe。</p><div class="paper-meta"><span>2025-12-30（arXiv v4）</span><span>JEPA-WM design study；DINO-WM / V-JEPA 2-AC comparison</span><span><span class="tag">V-JEPA</span><span class="tag">DINO</span><span class="tag">WAM</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2512.24497" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2512.24497-what-drives-jepa-wm.md">查看 Markdown 源文件</a></div></header><section class="architecture-section"><h2>核心结构 / 方法总览</h2><figure class="core-figure" id="core-figure"><a href="../assets/figures/2512.24497-what-drives-jepa-wm.png" target="_blank" rel="noreferrer" aria-label="打开原尺寸结构图"><img src="../assets/figures/2512.24497-what-drives-jepa-wm.png" alt="Figure 1 : Left: Training of JEPA-WM: the encoder E ϕ , θ E_{\phi,\theta} embeds video and optionally proprioceptive observation, which is fed to the predictor P θ P_{\theta} , along with actions, to predict (in parallel across timesteps) the next state embedding. Right: Planning with JEPA-WM: sample action sequences, unroll the predictor on them, compute a planning cost L p L^{p} for each trajectory, and use this cost to iteratively refine the action sampling. The action encoder A θ A_{\theta} and proprioceptive encoder E θ p ​ r ​ o ​ p E_{\theta}^{prop} are not explicitly displayed in this figure for readability." loading="lazy"></a><figcaption><p>Figure 1 : Left: Training of JEPA-WM: the encoder E ϕ , θ E_{\phi,\theta} embeds video and optionally proprioceptive observation, which is fed to the predictor P θ P_{\theta} , along with actions, to predict (in parallel across timesteps) the next state embedding. Right: Planning with JEPA-WM: sample action sequences, unroll the predictor on them, compute a planning cost L p L^{p} for each trajectory, and use this cost to iteratively refine the action sampling. The action encoder A θ A_{\theta} and proprioceptive encoder E θ p ​ r ​ o ​ p E_{\theta}^{prop} are not explicitly displayed in this figure for readability.</p><div class="figure-links"><a href="../assets/figures/2512.24497-what-drives-jepa-wm.png" target="_blank" rel="noreferrer">查看原尺寸 ↗</a><a href="https://arxiv.org/html/2512.24497" target="_blank" rel="noreferrer">原论文 / 图来源 ↗</a></div><small>原图及图注归论文作者所有；保留出处供研究阅读，不代表获得再分发授权。</small></figcaption></figure></section><div class="article-body"><h1 id="what-drives-success-in-physical-planning-with-joint-embedding-predictive-world-models">What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2512.24497</p><h1>What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1><p class="paper-summary">系统研究 JEPA-WM 的 encoder、world-model architecture、training objective 和 planner，提出在 navigation 与 manipulation 上优于 DINO-WM 和 V-JEPA 2-AC 的组合 recipe。</p><div class="paper-meta"><span>2025-12-30（arXiv v4）</span><span>JEPA-WM design study；DINO-WM / V-JEPA 2-AC comparison</span><span><span class="tag">V-JEPA</span><span class="tag">DINO</span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2512.24497" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2512.24497-what-drives-jepa-wm.md">查看 Markdown 源文件</a></div></header><section class="architecture-section"><h2>核心结构 / 方法总览</h2><figure class="core-figure" id="core-figure"><a href="../assets/figures/2512.24497-what-drives-jepa-wm.png" target="_blank" rel="noreferrer" aria-label="打开原尺寸结构图"><img src="../assets/figures/2512.24497-what-drives-jepa-wm.png" alt="Figure 1 : Left: Training of JEPA-WM: the encoder E ϕ , θ E_{\phi,\theta} embeds video and optionally proprioceptive observation, which is fed to the predictor P θ P_{\theta} , along with actions, to predict (in parallel across timesteps) the next state embedding. Right: Planning with JEPA-WM: sample action sequences, unroll the predictor on them, compute a planning cost L p L^{p} for each trajectory, and use this cost to iteratively refine the action sampling. The action encoder A θ A_{\theta} and proprioceptive encoder E θ p ​ r ​ o ​ p E_{\theta}^{prop} are not explicitly displayed in this figure for readability." loading="lazy"></a><figcaption><p>Figure 1 : Left: Training of JEPA-WM: the encoder E ϕ , θ E_{\phi,\theta} embeds video and optionally proprioceptive observation, which is fed to the predictor P θ P_{\theta} , along with actions, to predict (in parallel across timesteps) the next state embedding. Right: Planning with JEPA-WM: sample action sequences, unroll the predictor on them, compute a planning cost L p L^{p} for each trajectory, and use this cost to iteratively refine the action sampling. The action encoder A θ A_{\theta} and proprioceptive encoder E θ p ​ r ​ o ​ p E_{\theta}^{prop} are not explicitly displayed in this figure for readability.</p><div class="figure-links"><a href="../assets/figures/2512.24497-what-drives-jepa-wm.png" target="_blank" rel="noreferrer">查看原尺寸 ↗</a><a href="https://arxiv.org/html/2512.24497" target="_blank" rel="noreferrer">原论文 / 图来源 ↗</a></div><small>原图及图注归论文作者所有；保留出处供研究阅读，不代表获得再分发授权。</small></figcaption></figure></section><div class="article-body"><h1 id="what-drives-success-in-physical-planning-with-joint-embedding-predictive-world-models">What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</h1>
 <h2 id="1">1. 基本信息</h2>
 <ul>
 <li>作者：Basile Terver, Tsung-Yen Yang, Jean Ponce, Adrien Bardes, Yann LeCun</li>
@@ -46,7 +46,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>适合作为 OpenWAM 的系统性 ablation checklist：encoder、rollout loss、planner 和 validation metric 都应单独控制，而不是只报告一个最终 success。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>需补录最终推荐模型的逐任务 success、真机是否闭环执行、各 encoder 的 checkpoint 和每个 planner 的完整预算。</p></div></article></main>
+<p>需补录最终推荐模型的逐任务 success、真机是否闭环执行、各 encoder 的 checkpoint 和每个 planner 的完整预算。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>这篇工作更像一项“实验诊断”而不是单一新模型。它问：JEPA world model 在真实物理规划中为什么有时成功、有时失败？到底是 encoder、预测 horizon、动作条件、数据、planner 还是 loss 在起作用？</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>如果把 world model 看成驾驶模拟器，这篇论文不是再造一辆车，而是把轮胎、地图、传感器、驾驶策略逐项替换，找出哪一个部件决定了车辆能否到达目标。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>编码器把视频和可选 proprioception 转成 latent；predictor 在动作条件下并行预测未来 latent；planner 采样动作序列并用 planning cost 排序，然后执行一段再重规划。论文围绕这条链路做受控对比，而不是只看一个最终 success 数字。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。JEPA loss 让预测 latent 接近真实未来表示；planning loss/采样策略决定预测误差如何转化成动作选择。关键点是 latent 的好坏必须用 downstream planning 验证，单独降低 representation loss 可能并不会降低控制失败率。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>阅读时要把 encoder quality、dynamics accuracy、planning cost 和 physical execution 四层分开。论文的价值在于给出不同任务族的 recipe 和失败原因，而不是宣称一个固定架构在所有场景都最优。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。JEPA loss 让预测 latent 接近真实未来表示；planning loss/采样策略决定预测误差如何转化成动作选择。关键点是 latent 的好坏必须用 downstream planning 验证，单独降低 representation loss 可能并不会降低控制失败率。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>navigation 与 real-world manipulation 的对照用于观察任务结构差异；预测 horizon、proprioception、planner 和表示选择的消融用于定位瓶颈；若某项只改善 latent metric 却不改善 success，说明表示指标与控制指标存在脱节。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>跨论文比较时必须对齐数据量、机器人平台、目标定义、planner 预算和是否使用 proprioception。不同任务上的 success 不能简单平均成“JEPA 好坏”。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：记录任务族、数据来源、输入模态、预测 horizon、planning cost、采样预算、是否重规划、真机/仿真边界及每个 ablation 的控制变量。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 把 world model 研究拆成可诊断的 encoder、predictor、planner 和 execution 四层；优先报告 planning-oriented evidence；为不同任务选择不同的训练 recipe。</li>
+<li><strong>不能直接推出：</strong> 它不等于一个新的通用 WAM，也不能仅凭 recipe 证明某种 encoder 在所有机器人上都占优。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 后续可将这套诊断协议作为 OpenWAM 的统一 benchmark，避免只报告一张 success 表而无法知道失败发生在哪一层。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>

@@ -53,7 +53,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>V-JEPA 2 是 V-JEPA Policy 的关键视觉基础；V-JEPA 2-AC 提供了 OpenWAM 可复用的 latent planning、goal-image 和 counterfactual visualization 评测范式。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>仍需补录两个实验室的相机布置和每个目标物的逐项失败类型；真机 trial 数、任务类型与 success 表已核对。</p></div></article></main>
+<p>仍需补录两个实验室的相机布置和每个目标物的逐项失败类型；真机 trial 数、任务类型与 success 表已核对。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>V-JEPA 2 的核心问题不是“如何让机器人直接输出动作”，而是先训练一个足够通用的时空视觉表示，让它能理解视频中的动作、预测未来，并在少量机器人数据上变成可规划的世界模型。它把大规模互联网视频学到的“视频常识”与少量机器人交互数据连接起来。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>可以把 action-free V-JEPA 2 看成通过大量视频学会物体运动语法的视觉大脑；V-JEPA 2-AC 则像给这个大脑补上“如果我执行这个动作，未来会怎样”的分支预测能力；goal-image planner 最后负责从候选动作中挑选能走向目标图像的方案。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>预训练阶段输入视频和图像，通过 masked video prediction 学习上下文与未来之间的关系；机器人适配阶段冻结或基本复用视觉 encoder，在 DROID 等未标注机器人视频上训练 action-conditioned predictor；部署时输入当前观测、目标图像和候选动作，比较预测未来 latent 与目标 latent 的距离，形成 image-goal planning。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。预训练的预测目标让表示保留运动和时序信息，而不是只保留静态类别语义；V-JEPA 2-AC 的动作条件训练让 latent 变化与机器人动作建立联系。这个设计降低了机器人标注成本，但不等于模型学会了所有任务的动作策略，规划器仍需要可靠的目标距离和短期预测。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>论文需要分开阅读三个层次：V-JEPA 2 是通用视频 encoder；V-JEPA 2-AC 是 action-conditioned latent world model；真机系统是基于 image goal 的 planner。前两个模块的能力评测覆盖视频理解和预测，不能直接与最后的机器人 success rate 当成同一个指标。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。预训练的预测目标让表示保留运动和时序信息，而不是只保留静态类别语义；V-JEPA 2-AC 的动作条件训练让 latent 变化与机器人动作建立联系。这个设计降低了机器人标注成本，但不等于模型学会了所有任务的动作策略，规划器仍需要可靠的目标距离和短期预测。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>Something-Something、Epic-Kitchens 和 Video QA 验证通用视频理解/预测能力；counterfactual、camera-position 和 latent decoding 分析验证表示是否编码了动作后果；两个实验室 Franka 的 pick-and-place 则回答少量机器人数据能否迁移到不同环境。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>真机结果是 image-goal pick-and-place，不是开放指令的 action-generating WAM。报告的成功率还受到目标物、实验室、相机和 planner 设置影响，应与其他论文按相同任务和协议比较。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定 V-JEPA 2 checkpoint、机器人适配数据时长、action chunk/horizon、goal matching 方式、planner 采样预算、实验室/机器人划分和每项任务的 trial denominator。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 大规模 action-free 视频预训练后再进行小规模 action-conditioned post-training；用 goal-image planning 测试 latent 是否真正具有控制价值；同时报告 understanding、prediction 和 robot control 三类证据。</li>
+<li><strong>不能直接推出：</strong> 它没有证明仅靠互联网视频就能解决机器人控制，也没有证明 V-JEPA 2 latent 在所有 embodiment 和长时域任务上都比专门训练的 policy 更好。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 后续最值得做的是把 V-JEPA 2-AC 与直接 action policy、V-JEPA Policy 和 JEPA-WAM 在同一机器人平台、同一数据预算下对齐比较。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>

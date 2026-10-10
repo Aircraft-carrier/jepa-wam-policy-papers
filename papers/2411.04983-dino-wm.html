@@ -47,7 +47,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>是 DINO-family encoder → latent world model → planner 的基础参照，可用于和 OpenWAM 的 V-JEPA latent、action expert 以及 flow matching head 做结构对比。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>没有统一的 action-generating WAM head，也没有与现代 VLA/WAM benchmark 直接对齐；更适合作为 latent planning baseline。</p></div></article></main>
+<p>没有统一的 action-generating WAM head，也没有与现代 VLA/WAM benchmark 直接对齐；更适合作为 latent planning baseline。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>DINO-WM 关注的是一个很具体但很关键的问题：机器人能不能不把视频还原成像素，而只在一个已经有语义的视觉特征空间里预测未来？传统像素世界模型需要解释颜色、纹理和光照等大量与控制无关的细节；本文把这些细节压缩掉，把规划目标改成“预测出来的未来特征是否接近目标图像特征”。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>可以把 DINOv2 看成一个已经学会“看懂物体和场景”的测量仪，把 world model 看成在这个测量仪读数上预测未来的模拟器，而 CEM/MPC 则像一个不断试算动作方案、执行第一小段并重新测量的驾驶员。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>当前图像先经过冻结的 DINOv2，得到带空间 patch 结构的视觉特征；离线轨迹中的动作序列与历史特征一起输入预测器，产生未来特征。测试时把目标图像也编码成特征，CEM 采样多组动作、滚动预测未来特征、按 latent goal distance 排序，再执行最有希望的第一段动作。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。训练信号不是像素重建，而是预测未来 DINOv2 特征与真实未来特征之间的误差。这样做直接强调“未来状态是否可用于规划”，但也意味着模型可能忽略某些对像素质量重要、对任务却不重要的细节；因此不能只看视觉重建质量判断它是否适合控制。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>需要区分三个模块：DINOv2 是视觉表示接口，预测器是动作条件的 latent dynamics，CEM/MPC 是推理时的规划器。论文的 policy 并不是一个一次前向就直接输出动作的 WAM head，而是 world model 加搜索算法的组合。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。训练信号不是像素重建，而是预测未来 DINOv2 特征与真实未来特征之间的误差。这样做直接强调“未来状态是否可用于规划”，但也意味着模型可能忽略某些对像素质量重要、对任务却不重要的细节；因此不能只看视觉重建质量判断它是否适合控制。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>PointMaze、PushT 和 Granular 等任务回答“语义特征能否支撑不同类型的 goal-conditioned planning”；encoder、causal mask、decoder loss 和数据规模消融回答“性能来自预训练表示还是来自预测器容量”；SSIM/LPIPS 与 success 的对比则帮助区分“预测得像”与“规划得对”。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>主要证据来自仿真和离线数据。即便 latent goal distance 与成功率相关，也不能直接推出它能在真实相机噪声、遮挡和动力学误差下稳定工作。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：重点固定 DINOv2 checkpoint、patch 特征的空间布局、预测 horizon、CEM 的采样/筛选预算、MPC 重规划频率和 goal distance 定义。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 冻结 DINOv2 作为 planning interface；用 latent goal distance 做任务无关规划；把 encoder、dynamics 和 planner 分开做消融。</li>
+<li><strong>不能直接推出：</strong> 它没有证明 DINOv2 特征可以直接替代 action policy，也没有证明无需目标环境数据就能完成真实机器人上的复杂操作。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 最值得继续验证的是：同一套 latent planner 是否能在真实机器人上面对视觉 distractor 和 embodiment shift；以及 feature prediction loss 与最终控制成功率之间的相关性是否在更多任务上成立。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>

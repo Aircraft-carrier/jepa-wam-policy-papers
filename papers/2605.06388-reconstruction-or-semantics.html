@@ -46,7 +46,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>这是最适合 OpenWAM 做 encoder ablation 的协议参考：用相同 WAM/policy head 对比 V-JEPA、DINO、VAE 等，并同时报告 latent quality、planning 和 policy success。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>需补录 BridgeV2 的真实/仿真比例、每个 OOD 设置 episodes、V-JEPA 2.1/Web-DINO checkpoint 和硬件部署信息。</p></div></article></main>
+<p>需补录 BridgeV2 的真实/仿真比例、每个 OOD 设置 episodes、V-JEPA 2.1/Web-DINO checkpoint 和硬件部署信息。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>这篇论文追问 latent world model 最容易被忽略的选择：latent 到底应该像素级可重建，还是应该保留对任务和语义有用的信息？重建目标偏好视觉细节，语义目标偏好可区分的状态，但控制真正需要的是“动作后果相关的信息”。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>像给机器人一张地图：重建型 latent 试图保存地图上的每块纹理，语义型 latent 更像只保存道路、障碍物和可通行区域；好的控制表示还要保证地图上的路线变化与真实动作后果一致。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>论文固定 transition model、action conditioning 和训练数据，只更换 encoder、可选 compression adapter 及 decoder path，再比较 latent diffusion rollout、VLM judge 和 policy performance。这样把“表示接口”的影响从 transition model 影响中隔离出来。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。重建 loss 让 latent 能恢复视觉内容，语义/预训练表示则提供对象和状态结构；最终的 action-conditioned prediction 约束 latent 具有可预测的动力学。每一种 loss 都可能丢失另一类信息，因此需要用 rollout quality 和 action success 共同判断。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>实验设计的关键不是某个新 policy，而是固定下游模型后替换表示接口。阅读时要关注 encoder、compression adapter、decoder 和 transition model 的边界，否则容易把表示优劣误归因给模型容量。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。重建 loss 让 latent 能恢复视觉内容，语义/预训练表示则提供对象和状态结构；最终的 action-conditioned prediction 约束 latent 具有可预测的动力学。每一种 loss 都可能丢失另一类信息，因此需要用 rollout quality 和 action success 共同判断。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>latent reconstruction、语义评测、trajectory visual quality 和 downstream policy 共同回答“哪种 latent 更适合机器人世界模型”；VLM judge 的结果适合做语义/轨迹可读性证据，但不能单独替代真实控制指标。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>不同 encoder 的预训练数据、尺度和 token 数可能不完全匹配；VLM judge 也可能偏好更容易描述的轨迹。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定 transition model、action conditioning、数据和训练预算；记录 encoder checkpoint、latent 尺寸、adapter、decoder、rollout horizon 和 judge protocol。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 在相同 transition/policy 下比较 encoder interface；同时测重建、语义、动态预测和控制；显式检查 compression adapter 的作用。</li>
+<li><strong>不能直接推出：</strong> 语义 latent 并不自动保证动作可控；更好的可视化或 VLM 评分不等于更高的 real-robot success。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 值得进一步研究能否用 action-oriented supervision 学到同时具备语义稳定性和动力学精度的 latent。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>

@@ -10,7 +10,7 @@
 </head>
 <body>
   <header class="topbar"><a class="brand" href="../index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="../index.html">卡片总览</a><a href="../overview.html">综合表格</a><a href="../figures.html">架构图画廊</a><a href="../all-papers.md">完整汇编</a><a href="../overview.md">研究索引</a></nav></header>
-  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2609.20277</p><h1>JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1><p class="paper-summary">用文本生成器为每条 instruction 生成视觉完成假设，再用 frozen V-JEPA 2.1 编码成 dense goal tokens，同时条件化 video/action experts，强化 WAM 的 instruction following。</p><div class="paper-meta"><span>2026-08-04（arXiv v1）</span><span>直接相关；visual-instruction-conditioned JEPA-WAM</span><span><span class="tag">V-JEPA</span><span class="tag">WAM</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2609.20277" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2609.20277-jepa-wam-visual-instruction.md">查看 Markdown 源文件</a></div></header><section class="architecture-section"><h2>核心结构 / 方法总览</h2><figure class="core-figure" id="core-figure"><a href="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" target="_blank" rel="noreferrer" aria-label="打开原尺寸结构图"><img src="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" alt="Figure 1: Overview of JEPA-WAM. For each language instruction ℓ \ell , we construct a visual-instruction bank ℬ ℓ \mathcal{B}_{\ell} containing K K images sampled from an instruction-conditioned text-to-image generator. One visual instruction is randomly sampled and encoded by frozen V-JEPA 2.1 and a learnable projector into compact representations Z ℓ Z_{\ell} at each training step. These representations condition the video and action experts together with the task instruction and current observations. The right panel shows the self- and cross-attention masks used during training and inference." loading="lazy"></a><figcaption><p>Figure 1: Overview of JEPA-WAM. For each language instruction ℓ \ell , we construct a visual-instruction bank ℬ ℓ \mathcal{B}_{\ell} containing K K images sampled from an instruction-conditioned text-to-image generator. One visual instruction is randomly sampled and encoded by frozen V-JEPA 2.1 and a learnable projector into compact representations Z ℓ Z_{\ell} at each training step. These representations condition the video and action experts together with the task instruction and current observations. The right panel shows the self- and cross-attention masks used during training and inference.</p><div class="figure-links"><a href="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" target="_blank" rel="noreferrer">查看原尺寸 ↗</a><a href="https://arxiv.org/html/2609.20277" target="_blank" rel="noreferrer">原论文 / 图来源 ↗</a></div><small>原图及图注归论文作者所有；保留出处供研究阅读，不代表获得再分发授权。</small></figcaption></figure></section><div class="article-body"><h1 id="jepa-wam-connecting-generated-visual-instructions-to-world-action-models-through-jepa-latent-representations">JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1>
+  <main class="container paper-container"><a class="back-link" href="../index.html">← 返回论文总览</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">PAPER NOTE · 2609.20277</p><h1>JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1><p class="paper-summary">用文本生成器为每条 instruction 生成视觉完成假设，再用 frozen V-JEPA 2.1 编码成 dense goal tokens，同时条件化 video/action experts，强化 WAM 的 instruction following。</p><div class="paper-meta"><span>2026-08-04（arXiv v1）</span><span>直接相关；visual-instruction-conditioned JEPA-WAM</span><span><span class="tag">V-JEPA</span><span class="tag">WAM</span><span class="tag">Policy</span><span class="tag">真机</span></span></div><div class="hero-actions"><a class="button primary" href="https://arxiv.org/abs/2609.20277" target="_blank" rel="noreferrer">打开 arXiv ↗</a><a class="button" href="../papers/2609.20277-jepa-wam-visual-instruction.md">查看 Markdown 源文件</a></div></header><section class="architecture-section"><h2>核心结构 / 方法总览</h2><figure class="core-figure" id="core-figure"><a href="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" target="_blank" rel="noreferrer" aria-label="打开原尺寸结构图"><img src="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" alt="Figure 1: Overview of JEPA-WAM. For each language instruction ℓ \ell , we construct a visual-instruction bank ℬ ℓ \mathcal{B}_{\ell} containing K K images sampled from an instruction-conditioned text-to-image generator. One visual instruction is randomly sampled and encoded by frozen V-JEPA 2.1 and a learnable projector into compact representations Z ℓ Z_{\ell} at each training step. These representations condition the video and action experts together with the task instruction and current observations. The right panel shows the self- and cross-attention masks used during training and inference." loading="lazy"></a><figcaption><p>Figure 1: Overview of JEPA-WAM. For each language instruction ℓ \ell , we construct a visual-instruction bank ℬ ℓ \mathcal{B}_{\ell} containing K K images sampled from an instruction-conditioned text-to-image generator. One visual instruction is randomly sampled and encoded by frozen V-JEPA 2.1 and a learnable projector into compact representations Z ℓ Z_{\ell} at each training step. These representations condition the video and action experts together with the task instruction and current observations. The right panel shows the self- and cross-attention masks used during training and inference.</p><div class="figure-links"><a href="../assets/figures/2609.20277-jepa-wam-visual-instruction.png" target="_blank" rel="noreferrer">查看原尺寸 ↗</a><a href="https://arxiv.org/html/2609.20277" target="_blank" rel="noreferrer">原论文 / 图来源 ↗</a></div><small>原图及图注归论文作者所有；保留出处供研究阅读，不代表获得再分发授权。</small></figcaption></figure></section><div class="article-body"><h1 id="jepa-wam-connecting-generated-visual-instructions-to-world-action-models-through-jepa-latent-representations">JEPA-WAM: Connecting Generated Visual Instructions to World Action Models through JEPA Latent Representations</h1>
 <h2 id="1">1. 基本信息</h2>
 <ul>
 <li>作者：Tianbin Liu, Jian Zhu, Taiyi Su, Jianjun Zhang, Chong Ma, Zitai Huang, Yi Xu</li>
@@ -54,7 +54,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>适合作为 OpenWAM instruction grounding 与 visual goal conditioning 的独立增强模块；可以在不改变 action/world backbone 的情况下测试“语言→视觉目标 latent”的收益。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>需从正文补充真实机器人本体型号、每个 task 的 rollout 数、生成器的完整型号及生成/推理时间成本；训练数据量和 GPU 推理设置已核对。</p></div></article></main>
+<p>需从正文补充真实机器人本体型号、每个 task 的 rollout 数、生成器的完整型号及生成/推理时间成本；训练数据量和 GPU 推理设置已核对。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>这篇工作研究的是“视觉指令如何进入 WAM”。与只把语言 token 拼到 policy 输入不同，它先把生成的视觉 instruction 与 JEPA latent 对齐，再让 world-action model 用这些未来/目标视觉状态指导动作。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>语言指令是“把杯子放到左边”，视觉指令更像给出一张可观察的目标草图；JEPA latent 则把当前画面和目标草图变成同一种可比较的内部坐标。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>语言或任务描述先生成视觉目标/视觉 instruction；当前观测和目标图像分别进入 JEPA 表示空间；WAM 预测动作条件的未来 latent，并用目标 latent 作为 action generation 或 planning 条件。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。视觉目标对齐让语义指令落到可感知的未来状态，future prediction 让动作与目标状态之间建立联系。风险是生成视觉 instruction 可能出现错误或偏差，因此需要区分语言理解失败、视觉生成失败和控制失败。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>论文组合了 instruction generation/grounding、JEPA representation 和 WAM policy。它的新增点更偏接口设计：如何把高层指令转换成 world model 能消费的视觉状态，而不是单独提出新的 encoder。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。视觉目标对齐让语义指令落到可感知的未来状态，future prediction 让动作与目标状态之间建立联系。风险是生成视觉 instruction 可能出现错误或偏差，因此需要区分语言理解失败、视觉生成失败和控制失败。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>视觉 instruction 的消融回答生成目标是否比纯语言更容易控制；不同任务/物体和语言表达测试 grounding 泛化；应查看失败案例是否来自目标图像不准确而非 WAM 本身。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>如果视觉 instruction 使用额外模型或目标信息，比较时必须说明这些信息是否在 baseline 中可用；生成图像质量也不应直接等同于可执行性。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定 instruction generator、目标图像来源、JEPA checkpoint、目标 latent 距离、WAM horizon、语言模板和失败分类标准。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 用可比较的视觉目标作为语言到控制的中间接口；在 latent space 检查当前状态、目标状态和预测未来的一致性。</li>
+<li><strong>不能直接推出：</strong> 它没有证明视觉指令一定比语言 token 更好，也没有消除目标生成模型和 WAM 的累计误差。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 可研究是否可以直接预测目标 latent，绕过像素级视觉 instruction 生成，降低错误传播。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>

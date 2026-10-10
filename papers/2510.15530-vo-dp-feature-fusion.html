@@ -55,6 +55,43 @@
 <li>VGGT 内部特征与 DINOv2 特征的具体层位、冻结/微调状态和 feature dimension 需要结合代码进一步核对。</li>
 <li>论文的主要对照是 DP/DP3 与 vision-only manipulation，不能直接等同于 JEPA latent WAM 的 future prediction 结果。</li>
 <li>当前已核对摘要、Figure 1/2、RoboTwin Table II、真实世界 Table V 和 robustness Table VI–IX。</li>
+</ul>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>VO-DP 解决的不是“是否使用视觉特征”，而是“语义信息和几何信息应该怎样共同进入一个视觉策略”。只看语义特征可能知道物体是什么却不准确知道距离和姿态；只看几何特征又可能缺少任务相关的物体语义。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>可以把语义特征理解为“这是什么、该抓哪里”，把几何特征理解为“它在哪里、空间关系怎样”。VO-DP 的 fuser 像一个翻译器，把两种描述对齐后压缩成 policy 能使用的场景状态。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>图像先经过 VGGT/DINOv2 路径分别得到语义和几何特征；残差 cross-attention 与 FFN 进行跨模态融合；空间压缩模块减少 token 数，再与 proprioception 拼接；最后 diffusion policy 根据场景表示生成连续动作。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。监督信号最终来自动作生成误差，融合模块通过 policy loss 学会保留对抓取和操作有用的语义-几何关系。它不等于显式地监督每个 3D 几何量，因此分析结果应关注几何特征是否真的改善动作成功，而不是只看融合后的 embedding。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>这篇论文的贡献主要在 encoder/fuser 和 policy conditioning，不是 world model。它没有 action-conditioned future predictor；与 JEPA/WAM 比较时应把它当作“中间视觉表示如何影响 policy”的相邻基线。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。监督信号最终来自动作生成误差，融合模块通过 policy loss 学会保留对抓取和操作有用的语义-几何关系。它不等于显式地监督每个 3D 几何量，因此分析结果应关注几何特征是否真的改善动作成功，而不是只看融合后的 embedding。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>不同语义/几何分支、融合位置和空间压缩设置回答“哪类信息真正有用”；vision-only manipulation 任务回答融合后的表示能否转成动作；若只报告 success，应同时关注场景复杂度和是否使用 proprioception。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>语义-几何融合的收益可能依赖 VGGT、DINOv2 和 policy backbone 的容量，不能把一次消融直接解释成普遍的 encoder 结论。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定语义/几何 encoder checkpoint、输入视角、空间下采样倍率、proprioception 是否使用、diffusion steps 和任务随机化。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 把语义与几何表示显式分支；在进入 policy 前做可控的 cross-attention 融合；把 token 数和 proprioception 作为单独变量做消融。</li>
+<li><strong>不能直接推出：</strong> 它没有证明预测未来 latent 对操作一定有帮助，也没有提供 WAM 式长时域规划或 zero-shot goal-conditioned control。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 可继续测试将 VO-DP 的语义-几何 fuser 放到 JEPA-WAM 或 V-JEPA Policy 的 action-conditioned predictor 前后，观察几何信息是否改善 long-horizon prediction。</li>
 </ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 

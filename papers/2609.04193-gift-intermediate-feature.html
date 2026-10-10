@@ -53,6 +53,43 @@
 <ul>
 <li>不同 policy configuration 的 encoder、数据规模和 action head 细节需要按 Appendix 逐项对齐，不能只比较摘要中的总成功率。</li>
 <li>当前卡片已核对摘要、方法、Figure 2/3/5、LIBERO/LIBERO-Plus/RoboCasa 结果；真机平台与完整 success 协议待继续核对。</li>
+</ul>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>GIFT 解决的是策略网络内部表征“知道什么但不会用”的问题。很多 VLA/policy 的中间视觉 token 已经包含几何和对象信息，却没有被动作 loss 充分塑形；GIFT 用动作相关的辅助监督引导这些中间 token。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>像训练学生时不仅看最终答案，还要求他在草稿中标出物体位置、可达区域和几何关系；这些草稿不直接替他写动作，但会让最终答案更稳定。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>观测、指令和 robot state 进入 policy；在中间视觉 token 上附加几何对齐、object-centric affordance 和 instruction-conditioned goal-region 预测；默认 no-injection 设计不把辅助预测结果直接喂给 action head，只通过梯度改变共享表示。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。辅助目标分别约束几何、可操作性和指令相关目标区域，action loss 仍负责最终行为。no-injection 的重要性在于它测试的是“representation shaping”而不是额外输入；但辅助标签质量和任务相关性会影响收益。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>GIFT 可以叠加在 VLA、WAM 或其他 action policy 上，贡献位置是 intermediate feature supervision，而不是新的 world model。阅读时要区分 auxiliary head 在训练时存在、推理时移除的事实。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。辅助目标分别约束几何、可操作性和指令相关目标区域，action loss 仍负责最终行为。no-injection 的重要性在于它测试的是“representation shaping”而不是额外输入；但辅助标签质量和任务相关性会影响收益。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>VLA 和两类 WAM formulation 的结果验证方法是否跨架构；去掉几何/affordance/goal-region 分支的消融定位贡献；OOD 物体、空间配置和指令测试辅助监督是否改善泛化。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>辅助监督需要额外标注或 teacher model；若 teacher 与评测分布相关，收益可能不是纯粹的表示泛化。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定插入层、teacher model、辅助标签生成、loss 权重、是否 injection、policy backbone 和所有 OOD 划分。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 在中间 token 上做 action-oriented auxiliary supervision；采用 no-injection 设计保持推理开销；分别消融每种结构性目标。</li>
+<li><strong>不能直接推出：</strong> 更强的中间表示不等于 world model 更准确，也不意味着辅助 head 可以在没有 action supervision 时独立产生策略。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 可测试 GIFT 监督是否能改善 JEPA future token 的可控性，或能否减少 WAM 对大规模机器人预训练的依赖。</li>
 </ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 

@@ -91,7 +91,44 @@
 <h2 id="8-openwam">8. 与 OpenWAM 的关系</h2>
 <p>是 <strong>I-JEPA → future embedding prediction + action generation</strong> 的直接 WAM 基线；可比较 I-JEPA vs V-JEPA vs DINO、multilayer AdaFuse、WM loss 和 DemoDPO 的独立作用。</p>
 <h2 id="9">9. 局限与待核对项</h2>
-<p>已核对 encoder、正文表格、可视化和真机评分协议。跨 encoder 的预训练数据与参数规模不完全匹配；真机 task-progress 与 success-rate benchmark 不应直接排序。来源定位：Table 1/2、Appendix C.2/C.5、Appendix D/D.1。</p></div></article></main>
+<p>已核对 encoder、正文表格、可视化和真机评分协议。跨 encoder 的预训练数据与参数规模不完全匹配；真机 task-progress 与 success-rate benchmark 不应直接排序。来源定位：Table 1/2、Appendix C.2/C.5、Appendix D/D.1。</p>
+<h2 id="10">10. 先建立直觉</h2>
+<h3 id="101">10.1 这篇论文到底要解决什么问题</h3>
+<p>这篇 LeWAM/I-JEPA 路线工作把 world action model 视为一个会逐渐形成“状态表征—动作后果—策略”的统一模型。重点不只是预测未来，而是让 latent 同时支持 planning、policy learning 和 demonstration-guided action selection。</p>
+<h3 id="102">10.2 读者可以先记住的类比</h3>
+<p>它像一个不断整理内部地图的机器人：一边根据视频判断状态，一边学习动作会怎样改变地图，再用示范告诉它哪些路线更值得选择。</p>
+<h2 id="11">11. 逐步读方法</h2>
+<h3 id="111">11.1 数据流</h3>
+<p>视觉序列经过 I-JEPA 风格的预测表示；action-conditioned predictor 产生未来 latent；policy/action module 从当前与预测状态生成候选动作；DemoDPO 或类似排序机制利用 demonstration guidance 选择更符合示范的行为。</p>
+<h3 id="112">11.2 训练时与推理时</h3>
+<p>训练阶段要把论文提供的未来帧、未来表示、动作、语言或辅助标签看成监督信号；部署阶段通常只有当前观测、任务条件和历史预测，不能偷看真实未来。未来表征预测让 latent 保留时序结构，动作监督让它可执行，示范偏好/排序让候选行为具有任务方向。多目标训练的风险是不同 loss 互相竞争，因此需要看每个分支去掉后的控制结果。</p>
+<h3 id="113">11.3 关键模块与张量含义</h3>
+<p>应区分 I-JEPA encoder、latent dynamics、policy/action head 和 demonstration preference module。它不是只有一个 encoder 替换，而是从 representation 到 action selection 的完整链路。</p>
+<h2 id="12">12. 训练目标为什么合理</h2>
+<ul>
+<li><strong>想学到的能力：</strong> 让表示包含任务相关状态，让 predictor 学会动作导致的未来变化，再让 policy 或 planner 把这些变化转成可执行动作。未来表征预测让 latent 保留时序结构，动作监督让它可执行，示范偏好/排序让候选行为具有任务方向。多目标训练的风险是不同 loss 互相竞争，因此需要看每个分支去掉后的控制结果。</li>
+<li><strong>可能的漏洞：</strong> latent loss、重建质量、VLM judge 或 imagined return 都只是代理指标；如果没有 matched downstream control，模型可能学会与成功无关的 shortcut。</li>
+</ul>
+<h2 id="13">13. 结果应该怎样读</h2>
+<h3 id="131">13.1 哪个实验回答哪个问题</h3>
+<p>主任务回答统一 latent 是否能同时服务预测和动作；DemoDPO/偏好模块消融回答示范 guidance 是否超过单纯 imitation；不同任务与 OOD 设置验证 latent 是否可迁移。</p>
+<h3 id="132">13.2 不要过度解读的地方</h3>
+<p>论文版本、标题命名和同名 LeWAM 工作容易混淆；必须以 arXiv ID 和版本为准。若结果来自不同数据预算或 policy backbone，不能直接横向排序。 论文的主结果、消融、表示分析和定性图分别回答不同问题；不要把它们压缩成一个“模型更强”的结论。</p>
+<h2 id="14">14. 复现与对比清单</h2>
+<ul>
+<li>数据与预处理：以第 5、7 节记录的任务、数据和划分为准，补齐未报告的 episode/rollout 数。</li>
+<li>表征与模型：固定 arXiv 版本、I-JEPA checkpoint、示范数据、候选动作数量、偏好排序温度、预测 horizon 和 policy sampling budget。</li>
+<li>训练与推理：记录 frozen/trainable 模块、history、prediction horizon、action chunk、sampling/denoising/规划预算。</li>
+<li>评测：固定 benchmark、split、seed、success/progress 定义，并区分仿真、离线和真机。</li>
+<li>公平对比：同时对齐 encoder checkpoint、参数规模、训练数据、推理延迟和额外目标信息。</li>
+</ul>
+<h2 id="15-takeaway">15. 读者 takeaway</h2>
+<ul>
+<li><strong>可以直接借鉴：</strong> 让预测 latent 同时进入 policy 和 planner；利用 demonstration 做候选动作排序；报告 prediction、action 和 planning 三层证据。</li>
+<li><strong>不能直接推出：</strong> I-JEPA 表示本身并不自动带来更好的控制；若没有 matched encoder/policy 对照，收益可能来自额外训练信号。</li>
+<li><strong>最值得复现：</strong> 在单一任务上固定 encoder 和 policy，只打开/关闭本文新增的 predictor、fusion、planner 或辅助监督。</li>
+<li><strong>最值得继续验证：</strong> 值得验证 demonstration guidance 是否可以用 uncertainty-aware ranking 替代，以及长时域 rollout 中 preference 信号是否稳定。</li>
+</ul></div></article></main>
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 
 </body>
