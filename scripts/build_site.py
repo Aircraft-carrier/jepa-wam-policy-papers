@@ -12,6 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 PAPERS = ROOT / "papers"
 ASSETS = ROOT / "assets"
 MANIFEST = ASSETS / "figure-manifest.json"
+CATEGORY_DOCS = [
+    ("planning-mpc-cem", "规划器：MPC、CEM 与 DS-CEM"),
+    ("direct-action-policies", "直接动作策略：WAM、JEPA Policy 与 VLA"),
+    ("visual-representations", "视觉编码器与表示：DINO、V-JEPA、I-JEPA"),
+    ("predictive-world-models", "预测式 Latent World Model"),
+    ("evaluation-and-visualization", "评测、泛化与可视化"),
+]
 
 
 def section(text: str, number: int) -> str:
@@ -108,7 +115,7 @@ def page_shell(title: str, body: str, active: str = "", scripts: tuple[str, ...]
   <link rel="stylesheet" href="{prefix}assets/figures.css?v=20261010">
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="{prefix}index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="{prefix}index.html">卡片总览</a><a href="{prefix}overview.html">综合表格</a><a href="{prefix}figures.html">架构图画廊</a><a href="{prefix}all-papers.md">完整汇编</a><a href="{prefix}overview.md">研究索引</a></nav></header>
+  <header class="topbar"><a class="brand" href="{prefix}index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="{prefix}index.html">卡片总览</a><a href="{prefix}overview.html">综合表格</a><a href="{prefix}categories.html">分类阅读</a><a href="{prefix}figures.html">架构图画廊</a><a href="{prefix}all-papers.md">完整汇编</a><a href="{prefix}overview.md">研究索引</a></nav></header>
   {body}
   <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
 {script_tags}
@@ -198,6 +205,19 @@ def build_gallery(papers: list[dict]) -> None:
     (ROOT / "figures.html").write_text(page_shell("核心结构图画廊", body), encoding="utf-8")
 
 
+def build_categories() -> None:
+    cards = []
+    for slug, title in CATEGORY_DOCS:
+        source = ROOT / f"{slug}.md"
+        body = markdown.markdown(source.read_text(encoding="utf-8"), extensions=["tables", "fenced_code"])
+        detail = f'<main class="container paper-container"><a class="back-link" href="categories.html">← 返回分类阅读</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">CATEGORY READING</p><h1>{html.escape(title)}</h1><div class="hero-actions"><a class="button" href="{slug}.md">查看 Markdown 源文件</a></div></header><div class="article-body">{body}</div></article></main>'
+        (ROOT / f"{slug}.html").write_text(page_shell(title, detail), encoding="utf-8")
+        card_summary = compact(re.sub(r"<[^>]+>", " ", body), 360)
+        cards.append(f'<article class="paper-card"><p class="eyebrow">CATEGORY READING</p><h2><a href="{slug}.html">{html.escape(title)}</a></h2><p>{html.escape(card_summary)}</p><div class="card-links"><a href="{slug}.html">打开分类解读 →</a><a href="{slug}.md">Markdown ↗</a></div></article>')
+    body = f'''<main class="container overview-container"><section class="overview-hero"><p class="eyebrow">CROSS-PAPER READING · {len(CATEGORY_DOCS)} CATEGORIES</p><h1>按问题阅读论文</h1><p class="lede">把 19 篇论文放到规划器、直接策略、视觉表示、预测式世界模型和评测方法五条主线上，解释它们共享什么、差异在哪里，以及每篇额外做了哪些实验。</p></section><div class="paper-grid">{"".join(cards)}</div></main>'''
+    (ROOT / "categories.html").write_text(page_shell("分类阅读", body), encoding="utf-8")
+
+
 def build_paper_pages(papers: list[dict]) -> None:
     for paper in papers:
         tags = "".join(f'<span class="tag">{html.escape(tag)}</span>' for tag in paper["tags"])
@@ -220,6 +240,7 @@ def main() -> None:
     build_index(papers)
     build_overview(papers)
     build_gallery(papers)
+    build_categories()
     build_paper_pages(papers)
     (ROOT / "data.json").write_text(json.dumps(papers, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Built website for {len(papers)} papers")

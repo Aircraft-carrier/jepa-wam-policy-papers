@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>预测式 Latent World Model · JEPA / WAM Papers</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20261010">
+  <link rel="stylesheet" href="assets/figures.css?v=20261010">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">◈</span> JEPA / WAM Papers</a><nav><a href="index.html">卡片总览</a><a href="overview.html">综合表格</a><a href="categories.html">分类阅读</a><a href="figures.html">架构图画廊</a><a href="all-papers.md">完整汇编</a><a href="overview.md">研究索引</a></nav></header>
+  <main class="container paper-container"><a class="back-link" href="categories.html">← 返回分类阅读</a><article class="paper-article"><header class="paper-header"><p class="eyebrow">CATEGORY READING</p><h1>预测式 Latent World Model</h1><div class="hero-actions"><a class="button" href="predictive-world-models.md">查看 Markdown 源文件</a></div></header><div class="article-body"><h1>预测式 Latent World Model 分类：从未来表示到动作后果</h1>
+<h2>1. World model 到底是什么</h2>
+<p>World model 是一个学习环境变化规律的模型。给定当前状态和动作，它尝试预测下一状态或未来一段状态。在这些论文中，状态通常不是原始 RGB 图像，而是 encoder 输出的 latent。</p>
+<pre><code class="language-text">z_t = Encoder(o_t)
+z_{t+1:t+H} = Predictor(z_t, a_{t:t+H-1}, language, proprioception)
+</code></pre>
+<p>使用 latent 的原因是机器人控制真正关心的是物体、姿态、接触和任务进度，而不是每个像素的光照变化。但 latent 越抽象，越需要证明它没有丢掉 action-relevant information。</p>
+<h2>2. 专有名词解释</h2>
+<ul>
+<li><strong>Action-conditioned prediction：</strong> 预测未来时显式输入动作，回答“执行这个动作会发生什么”。</li>
+<li><strong>Teacher forcing：</strong> 预测第 <code>t+1</code> 步时使用真实的前一步状态；训练稳定，但可能掩盖长时域误差。</li>
+<li><strong>Autoregressive rollout：</strong> 第一步预测结果作为下一步输入，反复滚动；更接近部署，但会累积误差。</li>
+<li><strong>Horizon：</strong> 预测未来多少步。短 horizon 误差小但看不远，长 horizon 看得远但更难稳定。</li>
+<li><strong>Representation collapse：</strong> 不同输入被映射成相似 latent，导致模型失去区分状态的能力。</li>
+<li><strong>Predictive latent：</strong> 不是当前图像的静态 embedding，而是与未来状态/动作后果相关的表示。</li>
+</ul>
+<h2>3. 逐篇比较</h2>
+<table>
+<thead>
+<tr>
+<th>论文</th>
+<th>world model 形式</th>
+<th>预测目标</th>
+<th>额外实验/指标</th>
+<th>可视化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="papers/2411.04983-dino-wm.md">DINO-WM</a></td>
+<td>DINOv2 latent dynamics</td>
+<td>future patch feature</td>
+<td>encoder、causal mask、decoder loss、数据规模；SSIM/LPIPS/goal success</td>
+<td>rollout、轨迹和 goal matching</td>
+</tr>
+<tr>
+<td><a href="papers/2506.09985-v-jepa-2.md">V-JEPA 2</a></td>
+<td>action-free V-JEPA + V-JEPA 2-AC</td>
+<td>视频未来 latent / action-conditioned future</td>
+<td>视频理解、anticipation、QA、image-goal robot planning</td>
+<td>counterfactual、latent decoding、camera sensitivity</td>
+</tr>
+<tr>
+<td><a href="papers/2605.07079-rla-wm.md">RLA-WM</a></td>
+<td>residual latent action world model</td>
+<td>动作引起的 residual feature change</td>
+<td>feature prediction、planning、visual RL、LPIPS/SSIM/DINO-L1/FLOPs</td>
+<td>residual rollout、质量-速度</td>
+</tr>
+<tr>
+<td><a href="papers/2608.09381-jepa-wam-joint.md">JEPA-WAM Joint</a></td>
+<td>joint current-future target + shared predictor</td>
+<td>future target embedding</td>
+<td>temporal gap、patch correlation、trajectory residual、latency</td>
+<td>temporal gap、patch correlation</td>
+</tr>
+<tr>
+<td><a href="papers/2610.10515-robojepa.md">RoboJEPA</a></td>
+<td>large multi-view/embodiment predictor</td>
+<td>next-step feature grid + long rollout</td>
+<td>teacher forcing vs rollout、12 embodiment scaling、imagination error 与 planning 相关性</td>
+<td>scaling curve、rollout</td>
+</tr>
+<tr>
+<td><a href="papers/2609.09630-jepa-policy.md">JEPA Policy</a></td>
+<td>paired future representation branch</td>
+<td>action 与 future representation 同时预测</td>
+<td>action-only、Diffusion Policy、future-error failure ranking、collapse audit</td>
+<td>error 曲线和失败排序</td>
+</tr>
+<tr>
+<td><a href="papers/2609.37250-vjepa-policy.md">V-JEPA Policy</a></td>
+<td>frozen predictive visual latent + predictor</td>
+<td>task-relevant future visual latent</td>
+<td>predictor pretraining、DROID transfer、LIBERO/LIBERO-Plus/RoboCasa</td>
+<td>future latent 和基础模型比较</td>
+</tr>
+<tr>
+<td><a href="papers/2610.12285-plaw-vla.md">PLaW-VLA</a></td>
+<td>future-state expert in frozen V-JEPA latent</td>
+<td>query-based future states</td>
+<td>future masking、horizon ablation、latency、RoboTwin Hard Horizon III</td>
+<td>PCA、horizon masking</td>
+</tr>
+<tr>
+<td><a href="papers/2610.12407-lewam.md">LeWAM</a></td>
+<td>unified bidirectional JEPA</td>
+<td>forward/backward/inverse/policy modes</td>
+<td>state R²、policy success、DS-CEM、distractor</td>
+<td>probe 和 planner rollout</td>
+</tr>
+</tbody>
+</table>
+<h2>4. 一样的地方</h2>
+<ul>
+<li><strong>都把未来预测作为控制接口。</strong> 未来不是为了制作视频，而是为了判断动作后果。</li>
+<li><strong>都需要 action conditioning。</strong> 没有动作条件时，模型只能预测“可能发生什么”，不能回答“我采取这个动作会发生什么”。</li>
+<li><strong>都存在 teacher-forcing 与 rollout gap。</strong> 单步预测好，不代表连续滚动稳定。</li>
+<li><strong>都必须区分 prediction metric 与 control metric。</strong> feature error、图像质量和 success 是三种不同层次的证据。</li>
+</ul>
+<h2>5. 不一样的地方</h2>
+<h3>预测目标不同</h3>
+<p>DINO-WM、V-JEPA 2、RoboJEPA 预测未来视觉 feature；RLA-WM 更强调 action residual；ACG-WAM 预测几何 future slot；JEPA Policy 和 PLaW-VLA 让未来预测直接进入 action generation；LeWAM 则进一步统一多种 prediction mode。</p>
+<h3>world model 的使用时机不同</h3>
+<ul>
+<li><strong>纯 planner：</strong> DINO-WM、V-JEPA 2，预测后交给 CEM/MPC 搜索。</li>
+<li><strong>policy 内部模块：</strong> JEPA-WAM、JEPA Policy、V-JEPA Policy、PLaW-VLA，预测结果直接条件化 action head。</li>
+<li><strong>分析/规模化重点：</strong> What Drives Success、RoboJEPA、Reconstruction or Semantics，重点是研究哪些表示和训练 recipe 更值得用。</li>
+</ul>
+<h3>是否重建像素</h3>
+<p>JEPA 系列通常在 embedding space 预测，不强制恢复完整 RGB；RLA-WM/DINO-WM 可以报告解码或 perceptual metrics，但这些指标主要是辅助诊断。</p>
+<h2>6. 指标解释</h2>
+<ul>
+<li><strong>One-step prediction error：</strong> 单步未来 latent 的误差，适合检查局部动力学。</li>
+<li><strong>Rollout/imagination error：</strong> 多步递归预测的误差，能暴露误差累积。</li>
+<li><strong>Temporal-gap ablation：</strong> 改变当前与目标未来之间的时间间隔，检查模型能看多远。</li>
+<li><strong>Patch correlation：</strong> 不同空间 patch 的表示相似度，帮助判断模型是否保留局部空间结构。</li>
+<li><strong>Trajectory residual：</strong> 预测轨迹与真实轨迹/状态之间的差异，可用于检查动态一致性。</li>
+<li><strong>Planning success：</strong> 预测模型被实际用于规划后的任务成功率，是最接近控制的指标，但仍受 planner 影响。</li>
+</ul>
+<h2>7. 可视化应该怎样读</h2>
+<ol>
+<li><strong>Teacher forcing vs rollout 曲线：</strong> 如果前者很好、后者迅速恶化，说明模型依赖真实中间状态，部署会不稳定。</li>
+<li><strong>不同 horizon 的预测图：</strong> 看预测是否逐渐模糊/漂移，以及漂移是否集中在控制关键物体。</li>
+<li><strong>Action counterfactual：</strong> 在相同观测下输入不同动作，未来 latent 是否出现不同且合理的分支。</li>
+<li><strong>未来 latent PCA/UMAP：</strong> 看时间远近、任务阶段和动作类别是否形成有意义的结构。</li>
+<li><strong>预测误差与失败案例：</strong> 检查 error 是否能提前标记失败，而不是只在失败之后变大。</li>
+</ol>
+<h2>8. 对 OpenWAM 的启发</h2>
+<p>一个可信的 OpenWAM world model 至少要同时通过三道检查：</p>
+<ol>
+<li><strong>表示检查：</strong> latent 能否线性读出物体、位姿、接触和任务阶段？</li>
+<li><strong>动力学检查：</strong> action-conditioned rollout 是否在长 horizon 保持稳定？</li>
+<li><strong>控制检查：</strong> 把预测接到相同 policy/planner 后，是否真正提高 success 或 OOD 泛化？</li>
+</ol></div></article></main>
+  <footer>持续整理视觉表征、世界模型与机器人策略论文 · Markdown 源文件可在仓库中直接阅读</footer>
+
+</body>
+</html>

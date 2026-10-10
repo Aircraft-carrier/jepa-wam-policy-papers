@@ -9,7 +9,7 @@
 - 本地预览：执行 `python3 -m http.server 8000`，然后打开 `http://localhost:8000/`。
 - 重新生成页面：执行 `python scripts/build_site.py`。
 - GitHub Pages：将本目录作为仓库根目录推送到 `main` 分支，`.github/workflows/pages.yml` 会自动发布网站。
-- 网站结构：`index.html` 卡片汇总、`overview.html` 综合表格、`figures.html` 核心结构图画廊、`papers/*.html` 单篇模板、`assets/figures/` 论文结构图、`papers/*.md` 原始解读。
+- 网站结构：`index.html` 卡片汇总、`overview.html` 综合表格、`categories.html` 分类阅读入口、`*category*.html` 分类解读页、`figures.html` 核心结构图画廊、`papers/*.html` 单篇模板、`assets/figures/` 论文结构图、`papers/*.md` 原始解读。
 - Codex skills：`skills/README.md`，包含论文总整理流程和新增单篇论文流程。
 
 > 更新时间：2026-10-10（Asia/Shanghai）。范围优先覆盖 2026 年公开、直接讨论 JEPA latent、world-action model（WAM）或 predictive latent world model + robot policy 的论文。数字以论文 HTML/PDF 正文为准；尚未从正文确认的字段明确标为“待核对”。
@@ -27,6 +27,12 @@
 7. 真机实验：平台、任务、指标、泛化设置
 8. 与 OpenWAM 的关系
 9. 局限与待核对项
+10. 先建立直觉：问题背景、通俗类比
+11. 逐步读方法：数据流、训练/推理、关键模块
+12. 训练目标为什么合理：loss、监督信号与潜在漏洞
+13. 结果应该怎样读：主实验、消融和过度解读边界
+14. 复现与对比清单
+15. 读者 takeaway
 
 ## 文献卡片
 
@@ -109,3 +115,4 @@
 - [检索记录](search-log.md)：查询词、纳入范围和增量扫描规则。
 - [BibTeX](references.bib)：以 arXiv ID 为主键的引用索引。
 - [Encoder 索引](encoder-matrix.md)：按 V-JEPA、DINO、I-JEPA 和混合路线组织论文。
+- [分类阅读入口](categories.md)：按 MPC/CEM、直接动作策略、视觉表示、预测式世界模型、评测与可视化组织跨论文比较。
